@@ -1,34 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Attendance Tracker Email Generator</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trending This Week - Newsletter Generator</title>
   <style>
     :root{
       --bg:#f3f3f3;
-      --card:#fff;
-      --border: rgba(0,0,0,.12);
-      --shadow: 0 10px 30px rgba(0,0,0,.10);
-
-      /* PDF palette */
-      --accent:#5B0A3A;            /* burgundy */
-      --muted: rgba(0,0,0,.65);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --card:#ffffff;
+      --border:rgba(0,0,0,.12);
+      --shadow:0 10px 30px rgba(0,0,0,.10);
+      --accent:#5b0a3a;
+      --muted:rgba(0,0,0,.65);
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
     }
-    *{ box-sizing:border-box; }
-    body{ margin:0; background:var(--bg); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#0b0b0b; }
-    .app{ display:grid; grid-template-columns: 380px 1fr; gap:16px; padding:16px; align-items:start; min-height:100vh; }
-    .panel, .preview{ background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); }
-    .panel{ padding:16px; position:sticky; top:16px; height: calc(100vh - 32px); overflow:auto; }
-    h1{ margin:0 0 6px 0; font-size:16px; letter-spacing:.4px; text-transform:uppercase; color:var(--accent); }
-    .sub{ margin:0 0 12px 0; color:var(--muted); font-size:12px; line-height:1.35; }
-    .section{ border-top:1px solid rgba(0,0,0,.08); padding-top:12px; margin-top:12px; }
-    .section h2{ margin:0 0 10px 0; font-size:12px; letter-spacing:.5px; text-transform:uppercase; }
-    .field{ margin-bottom:10px; }
-    label{ display:block; font-size:11px; letter-spacing:.35px; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:6px; }
-    input[type="text"], input[type="number"], input[type="file"], textarea{
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:#111;
+    }
+    .app{
+      display:grid;
+      grid-template-columns:390px 1fr;
+      gap:16px;
+      padding:16px;
+      min-height:100vh;
+      align-items:start;
+    }
+    .panel,.preview{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+    }
+    .panel{
+      padding:16px;
+      position:sticky;
+      top:16px;
+      max-height:calc(100vh - 32px);
+      overflow:auto;
+    }
+    h1{
+      margin:0 0 6px 0;
+      font-size:16px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .sub{
+      margin:0 0 12px 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .section{
+      border-top:1px solid rgba(0,0,0,.08);
+      padding-top:12px;
+      margin-top:12px;
+    }
+    .section h2{
+      margin:0 0 10px 0;
+      font-size:12px;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+    .field{margin-bottom:10px}
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:11px;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--muted);
+    }
+    input[type="text"],input[type="url"],input[type="file"],textarea{
       width:100%;
       padding:10px 11px;
       border-radius:12px;
@@ -38,12 +86,26 @@
       outline:none;
       background:#fff;
     }
-    textarea{ min-height: 92px; resize: vertical; line-height: 1.35; }
-
-    input:focus, textarea:focus{ border-color: rgba(91,10,58,.55); box-shadow:0 0 0 4px rgba(91,10,58,.10); }
-
-    .row{ display:grid; grid-template-columns: 1fr 110px; gap:10px; }
-    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+    textarea{
+      min-height:120px;
+      resize:vertical;
+      line-height:1.4;
+    }
+    input:focus,textarea:focus{
+      border-color:rgba(91,10,58,.55);
+      box-shadow:0 0 0 4px rgba(91,10,58,.10);
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
     button{
       border:1px solid rgba(0,0,0,.16);
       background:#fff;
@@ -56,14 +118,21 @@
       text-transform:uppercase;
       cursor:pointer;
     }
-    button.primary{ background:var(--accent); color:#fff; border-color:transparent; }
-    button:active{ transform: translateY(1px); }
-    .hint{ font-size:11px; color:var(--muted); line-height:1.35; margin-top:6px; }
-    .mini{ font-size:11px; color:var(--muted); margin-top:6px; }
+    button.primary{
+      background:var(--accent);
+      color:#fff;
+      border-color:transparent;
+    }
+    .hint,.mini{
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.35;
+      margin-top:6px;
+    }
     .img-preview{
       margin-top:8px;
-      width: 100%;
-      max-width: 240px;
+      width:100%;
+      max-width:220px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       padding:8px;
@@ -76,19 +145,23 @@
       border-radius:8px;
       object-fit:contain;
     }
-
-    .preview{ padding:16px; }
-    .tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .preview{padding:16px}
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
     .frame{
       width:100%;
-      height: 720px;
+      height:780px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       background:#fff;
     }
     #htmlOut{
       width:100%;
-      height:720px;
+      height:780px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       padding:12px;
@@ -97,193 +170,180 @@
       line-height:1.35;
       resize:vertical;
     }
-
-    @media (max-width: 1100px){
-      .app{ grid-template-columns: 1fr; }
-      .panel{ position:relative; height:auto; top:auto; }
-      .frame, #htmlOut{ height:560px; }
+    @media (max-width:1100px){
+      .app{grid-template-columns:1fr}
+      .panel{position:relative;top:auto;max-height:none}
+      .frame,#htmlOut{height:560px}
     }
   </style>
 </head>
 <body>
   <div class="app">
     <aside class="panel">
-      <h1>Email Generator</h1>
-      <p class="sub">Fill the form and click <b>Generate</b>. You can use image URLs or upload files.</p>
+      <h1>Newsletter Generator</h1>
+      <p class="sub">Add your own titles and content. Empty sections will stay hidden in the preview and final HTML.</p>
 
       <form id="form">
         <div class="section">
-          <h2>Header</h2>
+          <h2>Top Bar</h2>
+
           <div class="field">
-            <label for="title">Main title (use line breaks with \n)</label>
-            <input id="title" name="title" type="text" value="LIVE SESSION\nATTENDANCE\nTRACKER">
+            <label for="logoUrl">Logo URL</label>
+            <input id="logoUrl" type="url" value="" placeholder="https://example.com/logo.png" />
           </div>
 
           <div class="field">
-            <label for="logoUrl">Logo image URL (optional)</label>
-            <input id="logoUrl" name="logoUrl" type="text" value="https://via.placeholder.com/220x220.png?text=Logo">
-            <div class="mini">If you upload a logo, it will override the URL.</div>
-          </div>
-
-          <div class="field">
-            <label for="logoUpload">Upload Logo (PNG/JPG/WebP)</label>
-            <input id="logoUpload" type="file" accept="image/*">
+            <label for="logoUpload">Upload Logo</label>
+            <input id="logoUpload" type="file" accept="image/*" />
             <div class="btns">
-              <button type="button" id="clearLogo" title="Remove uploaded logo">Clear Uploaded Logo</button>
+              <button type="button" id="clearLogo">Clear Logo</button>
             </div>
             <div class="img-preview" id="logoPreviewBox" style="display:none;">
               <img id="logoPreview" alt="Logo preview">
             </div>
-            <div class="hint">Note: some email systems block embedded (data:) images. If that happens, use a hosted URL.</div>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Training band</h2>
-
-          <div class="field">
-            <label for="avatarUrl">Avatar image URL (optional)</label>
-            <input id="avatarUrl" name="avatarUrl" type="text" value="https://via.placeholder.com/200x200.png?text=Photo">
-            <div class="mini">If you upload an avatar, it will override the URL.</div>
-          </div>
-
-          <div class="field">
-            <label for="avatarUpload">Upload Avatar (PNG/JPG/WebP)</label>
-            <input id="avatarUpload" type="file" accept="image/*">
-            <div class="btns">
-              <button type="button" id="clearAvatar" title="Remove uploaded avatar">Clear Uploaded Avatar</button>
-            </div>
-            <div class="img-preview" id="avatarPreviewBox" style="display:none;">
-              <img id="avatarPreview" alt="Avatar preview">
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="training">Training line</label>
-            <input id="training" name="training" type="text" value="TRAINING: COMPLIANCE CONCORRENCIAL">
-          </div>
-          <div class="field">
-            <label for="enabler">Enabler line</label>
-            <input id="enabler" name="enabler" type="text" value="ENABLER - NADIA MACHADO">
-          </div>
-        </div>
-
-        <!-- Text box 1 -->
-        <div class="section">
-          <h2>Text Block 1 (between Band and KPIs)</h2>
-          <div class="field">
-            <label for="textBlock1">Content (use line breaks with \n)</label>
-            <textarea id="textBlock1" placeholder="Type your message..."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>KPIs</h2>
-          <div class="field">
-            <label for="invited">Total invited</label>
-            <input id="invited" name="invited" type="number" min="0" value="155">
-          </div>
-          <div class="field">
-            <label for="attendance">Total attendance</label>
-            <input id="attendance" name="attendance" type="number" min="0" value="118">
-          </div>
-          <p class="hint">Avg % is calculated automatically: attendance ÷ invited.</p>
-        </div>
-
-        <!-- Text box 2 -->
-        <div class="section">
-          <h2>Text Block 2 (between KPIs and Chart)</h2>
-          <div class="field">
-            <label for="textBlock2">Content (use line breaks with \n)</label>
-            <textarea id="textBlock2" placeholder="Type your message..."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Bar chart</h2>
-
-          <div class="row">
-            <div class="field">
-              <label for="b1Label">Bar 1 label</label>
-              <input id="b1Label" type="text" value="Sales">
-            </div>
-            <div class="field">
-              <label for="b1Pct">%</label>
-              <input id="b1Pct" type="number" min="0" max="100" value="80">
-            </div>
+            <div class="mini">Use a hosted image URL if this will be sent by email.</div>
           </div>
 
           <div class="row">
             <div class="field">
-              <label for="b2Label">Bar 2 label</label>
-              <input id="b2Label" type="text" value="Client Success">
+              <label for="topLinkText">Top Right Link Text</label>
+              <input id="topLinkText" type="text" value="" placeholder="Revenue Strategy" />
             </div>
             <div class="field">
-              <label for="b2Pct">%</label>
-              <input id="b2Pct" type="number" min="0" max="100" value="45">
+              <label for="topLinkUrl">Top Right Link URL</label>
+              <input id="topLinkUrl" type="url" value="" placeholder="https://example.com" />
             </div>
+          </div>
+
+          <div class="field">
+            <label for="audienceText">Audience Text</label>
+            <input id="audienceText" type="text" value="" placeholder="Audience: Revenue Org" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Hero</h2>
+
+          <div class="field">
+            <label for="heroTitle">Main Title</label>
+            <input id="heroTitle" type="text" value="" placeholder="Trending This Week" />
+          </div>
+
+          <div class="field">
+            <label for="heroDate">Date</label>
+            <input id="heroDate" type="text" value="" placeholder="March 6, 2026" />
           </div>
 
           <div class="row">
             <div class="field">
-              <label for="b3Label">Bar 3 label</label>
-              <input id="b3Label" type="text" value="Indirect">
+              <label for="heroButtonText">Button Text</label>
+              <input id="heroButtonText" type="text" value="" placeholder="Listen to the content" />
             </div>
             <div class="field">
-              <label for="b3Pct">%</label>
-              <input id="b3Pct" type="number" min="0" max="100" value="76">
+              <label for="heroButtonUrl">Button URL</label>
+              <input id="heroButtonUrl" type="url" value="" placeholder="https://example.com" />
             </div>
           </div>
+        </div>
 
+        <div class="section">
+          <h2>Section 1</h2>
+          <div class="field">
+            <label for="s1Title">Title</label>
+            <input id="s1Title" type="text" value="" placeholder="Section title" />
+          </div>
+          <div class="field">
+            <label for="s1Body">Body</label>
+            <textarea id="s1Body" placeholder="Write section content here... Use a blank line for a new paragraph. Start a line with - for bullets."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Purple Card</h2>
+          <div class="field">
+            <label for="purpleLabel">Badge / Label</label>
+            <input id="purpleLabel" type="text" value="" placeholder="Golden Hours" />
+          </div>
+          <div class="field">
+            <label for="purpleBody">Body</label>
+            <textarea id="purpleBody" placeholder="Write callout content here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Section 2</h2>
+          <div class="field">
+            <label for="s2Title">Title</label>
+            <input id="s2Title" type="text" value="" placeholder="Section title" />
+          </div>
+          <div class="field">
+            <label for="s2Body">Body</label>
+            <textarea id="s2Body" placeholder="Write section content here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Pink Card</h2>
+          <div class="field">
+            <label for="pinkLabel">Badge / Label</label>
+            <input id="pinkLabel" type="text" value="" placeholder="Card label" />
+          </div>
+          <div class="field">
+            <label for="pinkBody">Body</label>
+            <textarea id="pinkBody" placeholder="Write callout content here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Section 3</h2>
+          <div class="field">
+            <label for="s3Title">Title</label>
+            <input id="s3Title" type="text" value="" placeholder="Section title" />
+          </div>
+          <div class="field">
+            <label for="s3Body">Body</label>
+            <textarea id="s3Body" placeholder="Write section content here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Green Card</h2>
+          <div class="field">
+            <label for="greenLabel">Badge / Label</label>
+            <input id="greenLabel" type="text" value="" placeholder="Reminders" />
+          </div>
+          <div class="field">
+            <label for="greenBody">Body</label>
+            <textarea id="greenBody" placeholder="Write callout content here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Footer</h2>
+          <div class="field">
+            <label for="footerLead">Footer Main Text</label>
+            <textarea id="footerLead" placeholder="Write footer text here..."></textarea>
+          </div>
           <div class="row">
             <div class="field">
-              <label for="b4Label">Bar 4 label</label>
-              <input id="b4Label" type="text" value="WE">
+              <label for="footerLinkText">Past Releases Link Text</label>
+              <input id="footerLinkText" type="text" value="" placeholder="here" />
             </div>
             <div class="field">
-              <label for="b4Pct">%</label>
-              <input id="b4Pct" type="number" min="0" max="100" value="80">
+              <label for="footerLinkUrl">Past Releases Link URL</label>
+              <input id="footerLinkUrl" type="url" value="" placeholder="https://example.com" />
             </div>
           </div>
-
-          <div class="btns">
-            <button type="submit" class="primary">Generate</button>
-            <button type="button" id="copyBtn">Copy Email HTML</button>
+          <div class="field">
+            <label for="copyrightText">Copyright</label>
+            <input id="copyrightText" type="text" value="" placeholder="© 2026 Wellhub. All rights reserved." />
           </div>
         </div>
 
-        <!-- Text box 3 -->
-        <div class="section">
-          <h2>Text Block 3 (after Chart)</h2>
-          <div class="field">
-            <label for="textBlock3">Content (use line breaks with \n)</label>
-            <textarea id="textBlock3" placeholder="Type your message..."></textarea>
-          </div>
+        <div class="btns">
+          <button type="submit" class="primary">Generate</button>
+          <button type="button" id="copyBtn">Copy HTML</button>
         </div>
-
-        <!-- Final image option -->
-        <div class="section">
-          <h2>Final Image (after Text Block 3)</h2>
-
-          <div class="field">
-            <label for="finalImageUrl">Final image URL (optional)</label>
-            <input id="finalImageUrl" name="finalImageUrl" type="text" value="">
-            <div class="mini">If you upload an image, it will override the URL.</div>
-          </div>
-
-          <div class="field">
-            <label for="finalImageUpload">Upload Final Image (PNG/JPG/WebP)</label>
-            <input id="finalImageUpload" type="file" accept="image/*">
-            <div class="btns">
-              <button type="button" id="clearFinalImage" title="Remove uploaded image">Clear Uploaded Final Image</button>
-            </div>
-            <div class="img-preview" id="finalImagePreviewBox" style="display:none;">
-              <img id="finalImagePreview" alt="Final image preview">
-            </div>
-            <div class="hint">Tip: use a hosted URL for maximum email compatibility.</div>
-          </div>
-        </div>
-
       </form>
     </aside>
 
@@ -293,321 +353,15 @@
         <button type="button" id="showHtml">HTML</button>
       </div>
 
-      <iframe class="frame" id="iframePreview" title="Email Preview"></iframe>
+      <iframe class="frame" id="iframePreview" title="Newsletter Preview"></iframe>
       <textarea id="htmlOut" style="display:none;" spellcheck="false"></textarea>
     </section>
   </div>
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const clamp = (n,min,max)=>Math.max(min, Math.min(max, Number(n)||0));
-    const escapeHtml = (s)=>String(s)
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
-    // Chart constants
-    const CHART_H = 260;
-
-    // PDF palette
-    const COLORS = {
-      emailOuterBg: "#f3f3f3",
-      containerBg:  "#F6F2EA",
-      headerBg:     "#F04C66",
-      headerText:   "#FFFFFF",
-      bandBg:       "#F7DDE1",
-      burgundy:     "#5B0A3A",
-      grid:         "#D9D1C8"
-    };
-
-    // In-memory uploaded images (Data URIs)
     let uploadedLogoDataUri = "";
-    let uploadedAvatarDataUri = "";
-    let uploadedFinalImageDataUri = "";
-
-    function barHeights(pct){
-      const p = clamp(pct, 0, 100) / 100;
-      const bar = Math.round(CHART_H * p);
-      const spacer = CHART_H - bar;
-      return {bar, spacer};
-    }
-
-    function barCell(pct, spacerH, barH){
-      const p = clamp(pct, 0, 100);
-      return `
-<td align="center" valign="bottom" style="width:25%; padding:0 8px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr><td height="${spacerH}" style="height:${spacerH}px; line-height:${spacerH}px;">&nbsp;</td></tr>
-    <tr>
-      <td height="${barH}" style="height:${barH}px; background:${COLORS.burgundy}; border-radius:14px 14px 0 0; text-align:center; font-family:Montserrat, Arial, Helvetica, sans-serif;">
-        <div style="color:#ffffff; font-weight:900; font-size:18px; line-height:18px; padding-top:10px;">${p}%</div>
-      </td>
-    </tr>
-  </table>
-</td>`;
-    }
-
-    function labelCell(label){
-      return `
-<td align="center" style="padding-top:10px; font-family: Montserrat, Arial, Helvetica, sans-serif; font-weight:900; color:${COLORS.burgundy}; font-size:16px;">
-  ${escapeHtml(label)}
-</td>`;
-    }
-
-    function pickLogoSrc(){
-      if (uploadedLogoDataUri) return uploadedLogoDataUri;
-      return $("logoUrl").value || "";
-    }
-
-    function pickAvatarSrc(){
-      if (uploadedAvatarDataUri) return uploadedAvatarDataUri;
-      return $("avatarUrl").value || "";
-    }
-
-    function pickFinalImageSrc(){
-      if (uploadedFinalImageDataUri) return uploadedFinalImageDataUri;
-      return $("finalImageUrl").value || "";
-    }
-
-    function formatTextBlock(raw){
-      const s = (raw || "").trim();
-      if (!s) return "";
-      return escapeHtml(s).replaceAll("\\n","<br>");
-    }
-
-    function textBlockRow(html){
-      if (!html) return "";
-      return `
-<tr>
-  <td class="pad" style="padding:16px 34px 0 34px; font-family: Montserrat, Arial, Helvetica, sans-serif; color:${COLORS.burgundy}; font-size:14px; line-height:20px; font-weight:600;">
-    ${html}
-  </td>
-</tr>`;
-    }
-
-    function finalImageRow(src){
-      const s = (src || "").trim();
-      if (!s) return "";
-      return `
-<tr>
-  <td class="pad" style="padding:16px 34px 0 34px;">
-    <img src="${escapeHtml(s)}" alt="Additional image" style="display:block; width:100%; max-width:572px; height:auto; border:0; border-radius:12px;">
-  </td>
-</tr>`;
-    }
-
-    function buildEmailTemplate(data){
-      const avg = data.invited > 0 ? Math.round((data.attendance / data.invited) * 100) : 0;
-
-      const b1 = barHeights(data.bars[0].pct);
-      const b2 = barHeights(data.bars[1].pct);
-      const b3 = barHeights(data.bars[2].pct);
-      const b4 = barHeights(data.bars[3].pct);
-
-      const titleHtml = escapeHtml(data.title).replaceAll("\\n","<br>");
-
-      const tb1 = formatTextBlock(data.textBlock1);
-      const tb2 = formatTextBlock(data.textBlock2);
-      const tb3 = formatTextBlock(data.textBlock3);
-
-      const finalImg = data.finalImageSrc || "";
-
-      return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
-<style>
-  body, table, td, a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
-  table, td { mso-table-lspace:0pt; mso-table-rspace:0pt; }
-  img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; }
-  table { border-collapse:collapse !important; }
-  body { margin:0 !important; padding:0 !important; width:100% !important; height:100% !important; }
-  @media screen and (max-width: 620px){
-    .container{ width:100% !important; }
-    .pad{ padding-left:18px !important; padding-right:18px !important; }
-    .title{ font-size:40px !important; line-height:40px !important; }
-    .kpi-col{ display:block !important; width:100% !important; }
-    .kpi-spacer{ height:18px !important; }
-    .bar-label{ font-size:14px !important; }
-  }
-</style>
-</head>
-<body style="background:${COLORS.emailOuterBg}; margin:0; padding:0;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${COLORS.emailOuterBg};">
-    <tr>
-      <td align="center" style="padding:24px 12px;">
-        <table role="presentation" class="container" width="640" cellpadding="0" cellspacing="0" border="0" style="width:640px; max-width:640px; background:${COLORS.containerBg};">
-
-          <!-- Header -->
-          <tr>
-            <td class="pad" style="background:${COLORS.headerBg}; padding:34px 34px 28px 34px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td valign="top" style="font-family: Montserrat, Arial, Helvetica, sans-serif; color:${COLORS.headerText};">
-                    <div class="title" style="font-size:52px; line-height:50px; font-weight:900; letter-spacing:0.5px; text-transform:uppercase;">
-                      ${titleHtml}
-                    </div>
-                  </td>
-                  <td align="right" valign="top" style="width:170px;">
-                    <img src="${escapeHtml(data.logoSrc)}" width="150" height="150" alt="Logo"
-                      style="display:block; width:150px; height:150px; object-fit:contain;">
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Band -->
-          <tr>
-            <td class="pad" style="background:${COLORS.bandBg}; padding:18px 34px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td valign="middle" style="width:86px;">
-                    <img src="${escapeHtml(data.avatarSrc)}" width="72" height="72" alt="Enabler"
-                      style="display:block; width:72px; height:72px; border-radius:72px; object-fit:cover;">
-                  </td>
-                  <td valign="middle" style="font-family: Montserrat, Arial, Helvetica, sans-serif;">
-                    <div style="color:${COLORS.burgundy}; font-size:20px; line-height:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px;">
-                      ${escapeHtml(data.training)}
-                    </div>
-                    <div style="color:${COLORS.burgundy}; font-size:14px; line-height:18px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; margin-top:6px;">
-                      ${escapeHtml(data.enabler)}
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Text Block 1 -->
-          ${textBlockRow(tb1)}
-
-          <!-- KPIs -->
-          <tr>
-            <td class="pad" style="padding:24px 34px 10px 34px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td class="kpi-col" align="center" valign="top" style="width:33.333%; font-family: Montserrat, Arial, Helvetica, sans-serif;">
-                    <div style="font-size:40px; line-height:44px; font-weight:900; color:${COLORS.burgundy};">${data.invited}</div>
-                    <div style="font-size:12px; line-height:16px; letter-spacing:0.8px; text-transform:uppercase; color:${COLORS.burgundy}; margin-top:10px;">
-                      TOTAL <strong style="font-weight:900; color:${COLORS.burgundy};">INVITED</strong>
-                    </div>
-                  </td>
-
-                  <td class="kpi-col" align="center" valign="top" style="width:33.333%; font-family: Montserrat, Arial, Helvetica, sans-serif;">
-                    <div style="font-size:40px; line-height:44px; font-weight:900; color:${COLORS.burgundy};">${data.attendance}</div>
-                    <div style="font-size:12px; line-height:16px; letter-spacing:0.8px; text-transform:uppercase; color:${COLORS.burgundy}; margin-top:10px;">
-                      TOTAL <strong style="font-weight:900; color:${COLORS.burgundy};">ATTENDANCE</strong>
-                    </div>
-                  </td>
-
-                  <td class="kpi-col" align="center" valign="top" style="width:33.333%; font-family: Montserrat, Arial, Helvetica, sans-serif;">
-                    <div style="font-size:40px; line-height:44px; font-weight:900; color:${COLORS.burgundy};">${avg}%</div>
-                    <div style="font-size:12px; line-height:16px; letter-spacing:0.8px; text-transform:uppercase; color:${COLORS.burgundy}; margin-top:10px;">
-                      AVG. <strong style="font-weight:900; color:${COLORS.burgundy};">ATTENDANCE %</strong>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Text Block 2 -->
-          ${textBlockRow(tb2)}
-
-          <!-- Spacer -->
-          <tr><td style="padding:0 34px;"><div style="height:18px; line-height:18px;">&nbsp;</div></td></tr>
-
-          <!-- Chart -->
-          <tr>
-            <td class="pad" style="padding:10px 34px 20px 34px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <!-- Y axis -->
-                  <td valign="top" style="width:64px; font-family: Montserrat, Arial, Helvetica, sans-serif; color:${COLORS.burgundy}; font-weight:900;">
-                    <table role="presentation" width="64" cellpadding="0" cellspacing="0" border="0">
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:0;">100%</td></tr>
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:44px;">80%</td></tr>
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:44px;">60%</td></tr>
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:44px;">40%</td></tr>
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:44px;">20%</td></tr>
-                      <tr><td style="font-size:16px; line-height:16px; padding-top:44px;">0%</td></tr>
-                    </table>
-                  </td>
-
-                  <!-- Plot area -->
-                  <td valign="top" style="padding-left:10px;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                      <tr>
-                        <td style="height:${CHART_H}px; vertical-align:bottom;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                              ${barCell(data.bars[0].pct, b1.spacer, b1.bar)}
-                              ${barCell(data.bars[1].pct, b2.spacer, b2.bar)}
-                              ${barCell(data.bars[2].pct, b3.spacer, b3.bar)}
-                              ${barCell(data.bars[3].pct, b4.spacer, b4.bar)}
-                            </tr>
-                            <tr>
-                              ${labelCell(data.bars[0].label)}
-                              ${labelCell(data.bars[1].label)}
-                              ${labelCell(data.bars[2].label)}
-                              ${labelCell(data.bars[3].label)}
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Text Block 3 -->
-          ${textBlockRow(tb3)}
-
-          <!-- Final Image -->
-          ${finalImageRow(finalImg)}
-
-          <!-- Bottom padding -->
-          <tr><td style="padding:0 34px 24px 34px;"><div style="height:1px; line-height:1px;">&nbsp;</div></td></tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
-    }
-
-    function readForm(){
-      return {
-        title: $("title").value || "",
-        logoSrc: pickLogoSrc(),
-        avatarSrc: pickAvatarSrc(),
-        training: $("training").value || "",
-        enabler: $("enabler").value || "",
-        textBlock1: $("textBlock1").value || "",
-        textBlock2: $("textBlock2").value || "",
-        textBlock3: $("textBlock3").value || "",
-        finalImageSrc: pickFinalImageSrc(),
-        invited: clamp($("invited").value, 0, 999999999),
-        attendance: clamp($("attendance").value, 0, 999999999),
-        bars: [
-          { label: $("b1Label").value || "", pct: clamp($("b1Pct").value, 0, 100) },
-          { label: $("b2Label").value || "", pct: clamp($("b2Pct").value, 0, 100) },
-          { label: $("b3Label").value || "", pct: clamp($("b3Pct").value, 0, 100) },
-          { label: $("b4Label").value || "", pct: clamp($("b4Pct").value, 0, 100) },
-        ]
-      };
-    }
-
-    function generate(){
-      const data = readForm();
-      const html = buildEmailTemplate(data);
-      $("htmlOut").value = html;
-      $("iframePreview").srcdoc = html;
-    }
 
     function fileToDataUri(file){
       return new Promise((resolve, reject) => {
@@ -616,6 +370,352 @@
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    }
+
+    function escapeHtml(s){
+      return String(s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function pickLogoSrc(){
+      return uploadedLogoDataUri || $("logoUrl").value || "";
+    }
+
+    function parseRichText(raw){
+      const text = String(raw || "").trim();
+      if (!text) return "";
+
+      const blocks = text.split(/\n\s*\n/);
+      return blocks.map(block => {
+        const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+        const allBullets = lines.length && lines.every(l => l.startsWith("- "));
+        if (allBullets){
+          return `<ul>${lines.map(l => `<li>${escapeHtml(l.slice(2))}</li>`).join("")}</ul>`;
+        }
+        return `<p>${lines.map(l => escapeHtml(l)).join("<br>")}</p>`;
+      }).join("");
+    }
+
+    function renderSection(title, body){
+      if (!String(title || "").trim() && !String(body || "").trim()) return "";
+      return `
+        <div class="section">
+          ${String(title || "").trim() ? `<h2>${escapeHtml(title)}</h2>` : ""}
+          ${String(title || "").trim() ? `<div class="rule"></div>` : ""}
+          ${String(body || "").trim() ? `<div class="content">${parseRichText(body)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderCallout(colorClass, label, body){
+      if (!String(label || "").trim() && !String(body || "").trim()) return "";
+      return `
+        <div class="callout ${colorClass}">
+          ${String(label || "").trim() ? `<div class="badge">${escapeHtml(label)}</div>` : ""}
+          ${String(body || "").trim() ? `<div class="content">${parseRichText(body)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderTopBar(data){
+      const hasLogo = String(data.logoSrc || "").trim();
+      const hasTopLinkText = String(data.topLinkText || "").trim();
+      const hasAudience = String(data.audienceText || "").trim();
+
+      if (!hasLogo && !hasTopLinkText && !hasAudience) return "";
+
+      return `
+        <div class="topbar">
+          <div class="logo-area">
+            ${hasLogo ? `<img src="${escapeHtml(data.logoSrc)}" alt="Logo">` : ""}
+            ${(hasTopLinkText || hasAudience) ? `
+              <div class="logo-meta">
+                ${hasTopLinkText ? `<div>${data.topLinkUrl ? `<a href="${escapeHtml(data.topLinkUrl)}">${escapeHtml(data.topLinkText)}</a>` : escapeHtml(data.topLinkText)}</div>` : ""}
+                ${hasAudience ? `<div>${escapeHtml(data.audienceText)}</div>` : ""}
+              </div>
+            ` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHero(data){
+      const hasTitle = String(data.heroTitle || "").trim();
+      const hasDate = String(data.heroDate || "").trim();
+      const hasButtonText = String(data.heroButtonText || "").trim();
+
+      if (!hasTitle && !hasDate && !hasButtonText) return "";
+
+      return `
+        <div class="hero">
+          ${hasTitle ? `<h1>${escapeHtml(data.heroTitle)}</h1>` : ""}
+          ${hasDate ? `<div class="hero-date">${escapeHtml(data.heroDate)}</div>` : ""}
+          ${hasButtonText ? `<a class="hero-btn" href="${escapeHtml(data.heroButtonUrl || "#")}">${escapeHtml(data.heroButtonText)}</a>` : ""}
+        </div>
+      `;
+    }
+
+    function renderFooter(data){
+      const hasLead = String(data.footerLead || "").trim();
+      const hasLinkText = String(data.footerLinkText || "").trim();
+      const hasCopyright = String(data.copyrightText || "").trim();
+
+      if (!hasLead && !hasLinkText && !hasCopyright) return "";
+
+      return `
+        <div class="footer">
+          ${(hasLead || hasLinkText) ? `
+            <div class="footer-main">
+              ${hasLead ? `${parseRichText(data.footerLead)}` : ""}
+              ${hasLinkText ? `<p>Past releases can be found ${data.footerLinkUrl ? `<a href="${escapeHtml(data.footerLinkUrl)}">${escapeHtml(data.footerLinkText)}</a>` : escapeHtml(data.footerLinkText)}.</p>` : ""}
+            </div>
+          ` : ""}
+          ${hasCopyright ? `<div class="footer-rule"></div><div class="copyright">${escapeHtml(data.copyrightText)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function buildHtml(data){
+      return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(data.heroTitle || "Newsletter")}</title>
+<style>
+  body{
+    margin:0;
+    background:#dcd8cf;
+    color:#232323;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  .page{
+    max-width:768px;
+    margin:0 auto;
+    background:#dcd8cf;
+    padding:28px 28px 34px;
+  }
+  .topbar{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    padding-bottom:18px;
+    border-bottom:1px solid #bfb7ae;
+  }
+  .logo-area{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+  }
+  .logo-area img{
+    display:block;
+    max-width:150px;
+    height:auto;
+  }
+  .logo-meta{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    line-height:1.2;
+    color:#222;
+    padding-top:2px;
+  }
+  .logo-meta a{
+    color:#0d5bd7;
+    font-weight:700;
+    text-decoration:underline;
+  }
+  .hero{
+    text-align:center;
+    padding:34px 0 28px;
+  }
+  .hero h1{
+    margin:0;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:52px;
+    line-height:1.08;
+    font-weight:700;
+    color:#272525;
+  }
+  .hero-date{
+    margin-top:18px;
+    font-size:18px;
+    line-height:1.3;
+    color:#585858;
+    font-weight:600;
+  }
+  .hero-btn{
+    display:inline-block;
+    margin-top:10px;
+    background:#ef476f;
+    color:#fff;
+    padding:14px 24px;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:800;
+    text-decoration:underline;
+  }
+  .section{
+    margin-top:28px;
+  }
+  .section h2{
+    margin:0 0 10px 0;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:30px;
+    line-height:1.22;
+    font-weight:500;
+    color:#2b2726;
+  }
+  .rule{
+    border-top:1px solid #c4bbb0;
+    margin:0 0 14px 0;
+  }
+  .content{
+    font-size:16px;
+    line-height:1.65;
+    color:#232323;
+  }
+  .content p{
+    margin:0 0 12px 0;
+  }
+  .content ul{
+    margin:6px 0 14px 24px;
+    padding:0 0 0 14px;
+  }
+  .content li{
+    margin:0 0 10px 0;
+  }
+  .content a{
+    color:#0d5bd7;
+    font-weight:700;
+    text-decoration:underline;
+  }
+  .callout{
+    margin-top:28px;
+    border-radius:14px;
+    padding:26px 24px 24px;
+    color:#fff;
+  }
+  .callout .badge{
+    display:inline-block;
+    background:rgba(255,255,255,.8);
+    color:#6a4ca8;
+    border-radius:8px;
+    padding:10px 18px;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:22px;
+    line-height:1.2;
+    margin-bottom:18px;
+  }
+  .callout .content{
+    color:#fff;
+    font-weight:600;
+  }
+  .callout .content p,
+  .callout .content li{
+    color:#fff;
+  }
+  .callout.purple{ background:#a57df2; }
+  .callout.purple .badge{ color:#6d52ab; }
+
+  .callout.pink{ background:#ef476f; }
+  .callout.pink .badge{ color:#c53d5a; }
+
+  .callout.green{ background:#146d3e; }
+  .callout.green .badge{
+    background:#d7ec63;
+    color:#1d3813;
+  }
+
+  .footer{
+    text-align:center;
+    padding-top:34px;
+  }
+  .footer-main{
+    font-size:16px;
+    line-height:1.55;
+    color:#555;
+    font-weight:700;
+  }
+  .footer-main p{
+    margin:0 0 8px 0;
+  }
+  .footer-main a{
+    color:#0d5bd7;
+    font-weight:700;
+    text-decoration:underline;
+  }
+  .footer-rule{
+    margin:40px 0 18px;
+    border-top:1px solid #bfb7ae;
+  }
+  .copyright{
+    font-size:14px;
+    color:#8c8c8c;
+  }
+
+  @media (max-width: 640px){
+    .page{ padding:18px; }
+    .topbar{ flex-direction:column; }
+    .hero h1{ font-size:38px; }
+    .section h2{ font-size:22px; }
+    .callout .badge{ font-size:18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    ${renderTopBar(data)}
+    ${renderHero(data)}
+    ${renderSection(data.s1Title, data.s1Body)}
+    ${renderCallout("purple", data.purpleLabel, data.purpleBody)}
+    ${renderSection(data.s2Title, data.s2Body)}
+    ${renderCallout("pink", data.pinkLabel, data.pinkBody)}
+    ${renderSection(data.s3Title, data.s3Body)}
+    ${renderCallout("green", data.greenLabel, data.greenBody)}
+    ${renderFooter(data)}
+  </div>
+</body>
+</html>`;
+    }
+
+    function readForm(){
+      return {
+        logoSrc: pickLogoSrc(),
+        topLinkText: $("topLinkText").value || "",
+        topLinkUrl: $("topLinkUrl").value || "",
+        audienceText: $("audienceText").value || "",
+        heroTitle: $("heroTitle").value || "",
+        heroDate: $("heroDate").value || "",
+        heroButtonText: $("heroButtonText").value || "",
+        heroButtonUrl: $("heroButtonUrl").value || "",
+        s1Title: $("s1Title").value || "",
+        s1Body: $("s1Body").value || "",
+        purpleLabel: $("purpleLabel").value || "",
+        purpleBody: $("purpleBody").value || "",
+        s2Title: $("s2Title").value || "",
+        s2Body: $("s2Body").value || "",
+        pinkLabel: $("pinkLabel").value || "",
+        pinkBody: $("pinkBody").value || "",
+        s3Title: $("s3Title").value || "",
+        s3Body: $("s3Body").value || "",
+        greenLabel: $("greenLabel").value || "",
+        greenBody: $("greenBody").value || "",
+        footerLead: $("footerLead").value || "",
+        footerLinkText: $("footerLinkText").value || "",
+        footerLinkUrl: $("footerLinkUrl").value || "",
+        copyrightText: $("copyrightText").value || ""
+      };
+    }
+
+    function generate(){
+      const html = buildHtml(readForm());
+      $("htmlOut").value = html;
+      $("iframePreview").srcdoc = html;
     }
 
     $("logoUpload").addEventListener("change", async (e) => {
@@ -627,24 +727,6 @@
       generate();
     });
 
-    $("avatarUpload").addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      uploadedAvatarDataUri = await fileToDataUri(file);
-      $("avatarPreview").src = uploadedAvatarDataUri;
-      $("avatarPreviewBox").style.display = "";
-      generate();
-    });
-
-    $("finalImageUpload").addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      uploadedFinalImageDataUri = await fileToDataUri(file);
-      $("finalImagePreview").src = uploadedFinalImageDataUri;
-      $("finalImagePreviewBox").style.display = "";
-      generate();
-    });
-
     $("clearLogo").addEventListener("click", () => {
       uploadedLogoDataUri = "";
       $("logoUpload").value = "";
@@ -652,38 +734,33 @@
       generate();
     });
 
-    $("clearAvatar").addEventListener("click", () => {
-      uploadedAvatarDataUri = "";
-      $("avatarUpload").value = "";
-      $("avatarPreviewBox").style.display = "none";
-      generate();
-    });
-
-    $("clearFinalImage").addEventListener("click", () => {
-      uploadedFinalImageDataUri = "";
-      $("finalImageUpload").value = "";
-      $("finalImagePreviewBox").style.display = "none";
-      generate();
-    });
-
     [
-      "title","logoUrl","avatarUrl","training","enabler",
-      "textBlock1","textBlock2","textBlock3",
-      "finalImageUrl",
-      "invited","attendance",
-      "b1Label","b1Pct","b2Label","b2Pct","b3Label","b3Pct","b4Label","b4Pct"
-    ].forEach(id => $(id).addEventListener("input", generate));
+      "logoUrl","topLinkText","topLinkUrl","audienceText",
+      "heroTitle","heroDate","heroButtonText","heroButtonUrl",
+      "s1Title","s1Body",
+      "purpleLabel","purpleBody",
+      "s2Title","s2Body",
+      "pinkLabel","pinkBody",
+      "s3Title","s3Body",
+      "greenLabel","greenBody",
+      "footerLead","footerLinkText","footerLinkUrl","copyrightText"
+    ].forEach(id => {
+      $(id).addEventListener("input", generate);
+    });
 
-    $("form").addEventListener("submit", (e) => { e.preventDefault(); generate(); });
+    $("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      generate();
+    });
 
     $("copyBtn").addEventListener("click", async () => {
       if (!$("htmlOut").value) generate();
       try{
         await navigator.clipboard.writeText($("htmlOut").value);
         $("copyBtn").textContent = "Copied!";
-        setTimeout(()=> $("copyBtn").textContent = "Copy Email HTML", 1200);
+        setTimeout(() => $("copyBtn").textContent = "Copy HTML", 1200);
       }catch(err){
-        alert("Copy failed. Switch to the HTML tab and copy manually.");
+        alert("Copy failed. Copy from the HTML tab manually.");
       }
     });
 
@@ -693,6 +770,7 @@
       $("iframePreview").style.display = "";
       $("htmlOut").style.display = "none";
     });
+
     $("showHtml").addEventListener("click", () => {
       $("showHtml").classList.add("primary");
       $("showPreview").classList.remove("primary");
