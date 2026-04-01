@@ -3,38 +3,53 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Trending This Week - Newsletter Generator</title>
+  <title>Partnership Newsletter Generator</title>
   <style>
     :root{
-      --bg:#f3f3f3;
-      --card:#ffffff;
-      --border:rgba(0,0,0,.12);
-      --shadow:0 10px 30px rgba(0,0,0,.10);
+      --app-bg:#f4f4f4;
+      --panel-bg:#ffffff;
+      --panel-border:rgba(0,0,0,.12);
+      --panel-shadow:0 10px 30px rgba(0,0,0,.10);
       --accent:#5b0a3a;
       --muted:rgba(0,0,0,.65);
-      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --page-bg:#e7e2d7;
+      --text:#1f1c1a;
+      --line:#7d786f;
+
+      --purple-pill:#6849a5;
+      --purple-card:#d9c8ef;
+
+      --pink-pill:#f04f79;
+      --pink-card:#f2d7df;
+
+      --green-pill:#176f46;
+      --green-card:#dceab6;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
-      background:var(--bg);
+      background:var(--app-bg);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:#111;
     }
+
     .app{
       display:grid;
-      grid-template-columns:390px 1fr;
+      grid-template-columns:420px 1fr;
       gap:16px;
       padding:16px;
       min-height:100vh;
       align-items:start;
     }
+
     .panel,.preview{
-      background:var(--card);
-      border:1px solid var(--border);
+      background:var(--panel-bg);
+      border:1px solid var(--panel-border);
       border-radius:16px;
-      box-shadow:var(--shadow);
+      box-shadow:var(--panel-shadow);
     }
+
     .panel{
       padding:16px;
       position:sticky;
@@ -42,6 +57,7 @@
       max-height:calc(100vh - 32px);
       overflow:auto;
     }
+
     h1{
       margin:0 0 6px 0;
       font-size:16px;
@@ -49,24 +65,29 @@
       text-transform:uppercase;
       color:var(--accent);
     }
+
     .sub{
       margin:0 0 12px 0;
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
     }
+
     .section{
       border-top:1px solid rgba(0,0,0,.08);
       padding-top:12px;
       margin-top:12px;
     }
+
     .section h2{
       margin:0 0 10px 0;
       font-size:12px;
       letter-spacing:.5px;
       text-transform:uppercase;
     }
+
     .field{margin-bottom:10px}
+
     label{
       display:block;
       margin-bottom:6px;
@@ -76,7 +97,11 @@
       font-weight:700;
       color:var(--muted);
     }
-    input[type="text"],input[type="url"],input[type="file"],textarea{
+
+    input[type="text"],
+    input[type="url"],
+    input[type="file"],
+    textarea{
       width:100%;
       padding:10px 11px;
       border-radius:12px;
@@ -86,26 +111,37 @@
       outline:none;
       background:#fff;
     }
+
     textarea{
-      min-height:120px;
+      min-height:108px;
       resize:vertical;
       line-height:1.4;
     }
-    input:focus,textarea:focus{
+
+    input:focus, textarea:focus{
       border-color:rgba(91,10,58,.55);
       box-shadow:0 0 0 4px rgba(91,10,58,.10);
     }
-    .row{
+
+    .row-2{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
     }
+
+    .row-3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+    }
+
     .btns{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       margin-top:8px;
     }
+
     button{
       border:1px solid rgba(0,0,0,.16);
       background:#fff;
@@ -118,225 +154,275 @@
       text-transform:uppercase;
       cursor:pointer;
     }
+
     button.primary{
       background:var(--accent);
       color:#fff;
       border-color:transparent;
     }
-    .hint,.mini{
+
+    .mini{
       font-size:11px;
       color:var(--muted);
       line-height:1.35;
       margin-top:6px;
     }
+
     .img-preview{
       margin-top:8px;
       width:100%;
-      max-width:220px;
+      max-width:200px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       padding:8px;
       background:#fff;
     }
+
     .img-preview img{
       width:100%;
       height:auto;
       display:block;
       border-radius:8px;
-      object-fit:contain;
+      object-fit:cover;
     }
+
     .preview{padding:16px}
+
     .tabs{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       margin-bottom:12px;
     }
+
     .frame{
       width:100%;
-      height:780px;
+      height:820px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       background:#fff;
     }
+
     #htmlOut{
       width:100%;
-      height:780px;
+      height:820px;
       border:1px solid rgba(0,0,0,.12);
       border-radius:12px;
       padding:12px;
-      font-family:var(--mono);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
       font-size:12px;
       line-height:1.35;
       resize:vertical;
     }
-    @media (max-width:1100px){
+
+    .person-card{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:12px;
+      padding:10px;
+      margin-bottom:10px;
+      background:#fafafa;
+    }
+
+    .person-card-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .person-card-title{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      color:#333;
+    }
+
+    .danger-btn{
+      border-color:rgba(180,0,0,.18);
+      color:#8a1d1d;
+    }
+
+    @media (max-width:1200px){
       .app{grid-template-columns:1fr}
       .panel{position:relative;top:auto;max-height:none}
-      .frame,#htmlOut{height:560px}
+      .frame,#htmlOut{height:620px}
     }
   </style>
 </head>
 <body>
   <div class="app">
     <aside class="panel">
-      <h1>Newsletter Generator</h1>
-      <p class="sub">Add your own titles and content. Empty sections stay hidden until you add content.</p>
+      <h1>Partnership Newsletter Generator</h1>
+      <p class="sub">This version matches the uploaded PDF style, and now you can add or delete team members dynamically.</p>
 
       <form id="form">
         <div class="section">
-          <h2>Top Bar</h2>
+          <h2>Header</h2>
 
           <div class="field">
             <label for="logoUrl">Logo URL</label>
-            <input id="logoUrl" type="url" value="" placeholder="https://example.com/logo.png" />
+            <input id="logoUrl" type="url" placeholder="https://example.com/logo.png">
           </div>
 
           <div class="field">
             <label for="logoUpload">Upload Logo</label>
-            <input id="logoUpload" type="file" accept="image/*" />
+            <input id="logoUpload" type="file" accept="image/*">
             <div class="btns">
               <button type="button" id="clearLogo">Clear Logo</button>
             </div>
             <div class="img-preview" id="logoPreviewBox" style="display:none;">
               <img id="logoPreview" alt="Logo preview">
             </div>
-            <div class="mini">Use a hosted image URL if this will be sent by email.</div>
           </div>
 
-          <div class="row">
+          <div class="row-3">
             <div class="field">
-              <label for="topLinkText">Top Right Link Text</label>
-              <input id="topLinkText" type="text" value="" placeholder="Revenue Strategy" />
+              <label for="headerLeft">Top Left</label>
+              <input id="headerLeft" type="text" placeholder="Created by Partnership Enablement">
             </div>
             <div class="field">
-              <label for="topLinkUrl">Top Right Link URL</label>
-              <input id="topLinkUrl" type="url" value="" placeholder="https://example.com" />
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="audienceText">Audience Text</label>
-            <input id="audienceText" type="text" value="" placeholder="Audience: Revenue Org" />
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Hero</h2>
-
-          <div class="field">
-            <label for="heroTitle">Main Title</label>
-            <input id="heroTitle" type="text" value="" placeholder="Trending This Week" />
-          </div>
-
-          <div class="field">
-            <label for="heroDate">Date</label>
-            <input id="heroDate" type="text" value="" placeholder="March 6, 2026" />
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label for="heroButtonText">Button Text</label>
-              <input id="heroButtonText" type="text" value="" placeholder="Listen to the content" />
+              <label for="headerCenter">Top Center</label>
+              <input id="headerCenter" type="text" placeholder="March 2026">
             </div>
             <div class="field">
-              <label for="heroButtonUrl">Button URL</label>
-              <input id="heroButtonUrl" type="url" value="" placeholder="https://example.com" />
+              <label for="headerRight">Top Right</label>
+              <input id="headerRight" type="text" placeholder="Audience: Partnership Team">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="mainTitle">Main Title</label>
+            <input id="mainTitle" type="text" placeholder="Partnerships Newsletter">
+          </div>
+
+          <div class="field">
+            <label for="subMonth">Month Line</label>
+            <input id="subMonth" type="text" placeholder="March 2026">
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Must Know</h2>
+          <div class="field">
+            <label for="mustKnowTitle">Title</label>
+            <input id="mustKnowTitle" type="text" placeholder="March MUST KNOW:">
+          </div>
+          <div class="field">
+            <label for="mustKnowBody">Body</label>
+            <textarea id="mustKnowBody" placeholder="Write the introduction here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Strategic Milestones Card</h2>
+          <div class="field">
+            <label for="strategicPill">Pill Text</label>
+            <input id="strategicPill" type="text" placeholder="STRATEGIC MILESTONES">
+          </div>
+          <div class="field">
+            <label for="strategicBody">Card Body</label>
+            <textarea id="strategicBody" placeholder="Use - for bullet items."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Enablement & Training Highlights</h2>
+          <div class="field">
+            <label for="enablementTitle">Title</label>
+            <input id="enablementTitle" type="text" placeholder="Enablement & Training Highlights:">
+          </div>
+          <div class="field">
+            <label for="enablementBody">Body</label>
+            <textarea id="enablementBody" placeholder="Add all training highlights here..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Growth & Product Initiatives Card</h2>
+          <div class="field">
+            <label for="growthPill">Pill Text</label>
+            <input id="growthPill" type="text" placeholder="WHAT IS NEW! - GROWTH & PRODUCT INITIATIVES">
+          </div>
+          <div class="field">
+            <label for="growthBody">Card Body</label>
+            <textarea id="growthBody" placeholder="Use - for bullet items."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Operational Essentials</h2>
+          <div class="field">
+            <label for="opsTitle">Title</label>
+            <input id="opsTitle" type="text" placeholder="Operational Essentials:">
+          </div>
+          <div class="field">
+            <label for="opsBody">Body</label>
+            <textarea id="opsBody" placeholder="Add operational essentials text here..."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="opsImageUrl">Operational Image URL</label>
+            <input id="opsImageUrl" type="url" placeholder="https://example.com/calendar.png">
+          </div>
+
+          <div class="field">
+            <label for="opsImageUpload">Upload Operational Image</label>
+            <input id="opsImageUpload" type="file" accept="image/*">
+            <div class="btns">
+              <button type="button" id="clearOpsImage">Clear Operational Image</button>
+            </div>
+            <div class="img-preview" id="opsImagePreviewBox" style="display:none;">
+              <img id="opsImagePreview" alt="Operational image preview">
             </div>
           </div>
         </div>
 
         <div class="section">
-          <h2>Section 1</h2>
+          <h2>Team Culture Card</h2>
           <div class="field">
-            <label for="s1Title">Title</label>
-            <input id="s1Title" type="text" value="" placeholder="Section title" />
+            <label for="culturePill">Pill Text</label>
+            <input id="culturePill" type="text" placeholder="TEAM CULTURE">
           </div>
           <div class="field">
-            <label for="s1Body">Body</label>
-            <textarea id="s1Body" placeholder="Write section content here... Use a blank line for a new paragraph. Start a line with - for bullets."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Purple Card</h2>
-          <div class="field">
-            <label for="purpleLabel">Badge / Label</label>
-            <input id="purpleLabel" type="text" value="" placeholder="Golden Hours" />
-          </div>
-          <div class="field">
-            <label for="purpleBody">Body</label>
-            <textarea id="purpleBody" placeholder="Write purple card content here..."></textarea>
+            <label for="cultureBody">Card Intro</label>
+            <textarea id="cultureBody" placeholder="Example: - Welcome to the team ..."></textarea>
           </div>
         </div>
 
         <div class="section">
-          <h2>Section 2</h2>
-          <div class="field">
-            <label for="s2Title">Title</label>
-            <input id="s2Title" type="text" value="" placeholder="Section title" />
+          <div class="person-card-header">
+            <div class="person-card-title">Team Members</div>
+            <button type="button" id="addMemberBtn">Add Team Member</button>
           </div>
-          <div class="field">
-            <label for="s2Body">Body</label>
-            <textarea id="s2Body" placeholder="Write section content here..."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Pink Card</h2>
-          <div class="field">
-            <label for="pinkLabel">Badge / Label</label>
-            <input id="pinkLabel" type="text" value="" placeholder="Card label" />
-          </div>
-          <div class="field">
-            <label for="pinkBody">Body</label>
-            <textarea id="pinkBody" placeholder="Write pink card content here..."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Section 3</h2>
-          <div class="field">
-            <label for="s3Title">Title</label>
-            <input id="s3Title" type="text" value="" placeholder="Section title" />
-          </div>
-          <div class="field">
-            <label for="s3Body">Body</label>
-            <textarea id="s3Body" placeholder="Write section content here..."></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h2>Green Card</h2>
-          <div class="field">
-            <label for="greenLabel">Badge / Label</label>
-            <input id="greenLabel" type="text" value="" placeholder="Reminders" />
-          </div>
-          <div class="field">
-            <label for="greenBody">Body</label>
-            <textarea id="greenBody" placeholder="Write green card content here..."></textarea>
-          </div>
+          <div id="teamMembersContainer"></div>
         </div>
 
         <div class="section">
           <h2>Footer</h2>
           <div class="field">
-            <label for="footerLead">Footer Main Text</label>
-            <textarea id="footerLead" placeholder="Write footer text here..."></textarea>
+            <label for="footerLine1">Footer Line 1</label>
+            <input id="footerLine1" type="text" placeholder="That's a wrap for March!">
           </div>
-          <div class="row">
+          <div class="field">
+            <label for="footerLine2">Footer Line 2</label>
+            <input id="footerLine2" type="text" placeholder="Every Month, you'll get the latest hot topics—so stay tuned!">
+          </div>
+          <div class="field">
+            <label for="footerLine3">Footer Line 3</label>
+            <input id="footerLine3" type="text" placeholder="Missed something? Just reach out...">
+          </div>
+
+          <div class="row-2">
             <div class="field">
               <label for="footerLinkText">Past Releases Link Text</label>
-              <input id="footerLinkText" type="text" value="" placeholder="here" />
+              <input id="footerLinkText" type="text" placeholder="HERE">
             </div>
             <div class="field">
               <label for="footerLinkUrl">Past Releases Link URL</label>
-              <input id="footerLinkUrl" type="url" value="" placeholder="https://example.com" />
+              <input id="footerLinkUrl" type="url" placeholder="https://example.com">
             </div>
-          </div>
-          <div class="field">
-            <label for="copyrightText">Copyright</label>
-            <input id="copyrightText" type="text" value="" placeholder="© 2026 Wellhub. All rights reserved." />
           </div>
         </div>
 
@@ -362,7 +448,13 @@
   <script>
     const $ = (id) => document.getElementById(id);
 
-    let uploadedLogoDataUri = "";
+    const uploadedImages = {
+      logo: "",
+      ops: ""
+    };
+
+    let teamMembers = [];
+    let teamMemberCounter = 0;
 
     function fileToDataUri(file){
       return new Promise((resolve, reject) => {
@@ -382,10 +474,6 @@
         .replaceAll("'","&#039;");
     }
 
-    function pickLogoSrc(){
-      return uploadedLogoDataUri || $("logoUrl").value || "";
-    }
-
     function parseRichText(raw){
       const text = String(raw || "").trim();
       if (!text) return "";
@@ -401,82 +489,82 @@
       }).join("");
     }
 
-    function renderSection(title, body){
+    function pickImage(uploadedKey, urlFieldId){
+      return uploadedImages[uploadedKey] || $(urlFieldId).value || "";
+    }
+
+    function renderSimpleSection(title, body){
       if (!String(title || "").trim() && !String(body || "").trim()) return "";
       return `
-        <div class="section">
-          ${String(title || "").trim() ? `<h2>${escapeHtml(title)}</h2>` : ""}
-          ${String(title || "").trim() ? `<div class="rule"></div>` : ""}
-          ${String(body || "").trim() ? `<div class="content">${parseRichText(body)}</div>` : ""}
-        </div>
+        <section class="block">
+          ${String(title || "").trim() ? `<h2 class="headline">${escapeHtml(title)}</h2>` : ""}
+          ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
+        </section>
       `;
     }
 
-    function renderCallout(colorClass, label, body){
-      if (!String(label || "").trim() && !String(body || "").trim()) return "";
+    function renderPillCard(pillText, body, pillClass, cardClass){
+      if (!String(pillText || "").trim() && !String(body || "").trim()) return "";
       return `
-        <div class="callout ${colorClass}">
-          ${String(label || "").trim() ? `<div class="badge">${escapeHtml(label)}</div>` : ""}
-          ${String(body || "").trim() ? `<div class="content">${parseRichText(body)}</div>` : ""}
-        </div>
+        <section class="block">
+          ${String(pillText || "").trim() ? `<div class="pill ${pillClass}">${escapeHtml(pillText)}</div>` : ""}
+          ${String(body || "").trim() ? `<div class="soft-card ${cardClass}"><div class="body-text">${parseRichText(body)}</div></div>` : ""}
+        </section>
       `;
     }
 
-    function renderTopBar(data){
-      const hasLogo = String(data.logoSrc || "").trim();
-      const hasTopLinkText = String(data.topLinkText || "").trim();
-      const hasAudience = String(data.audienceText || "").trim();
-
-      if (!hasLogo && !hasTopLinkText && !hasAudience) return "";
-
+    function renderOpsSection(title, body, imageSrc){
+      if (!String(title || "").trim() && !String(body || "").trim() && !String(imageSrc || "").trim()) return "";
       return `
-        <div class="topbar">
-          <div class="logo-area">
-            ${hasLogo ? `<img src="${escapeHtml(data.logoSrc)}" alt="Logo">` : ""}
-            ${(hasTopLinkText || hasAudience) ? `
-              <div class="logo-meta">
-                ${hasTopLinkText ? `<div>${data.topLinkUrl ? `<a href="${escapeHtml(data.topLinkUrl)}">${escapeHtml(data.topLinkText)}</a>` : escapeHtml(data.topLinkText)}</div>` : ""}
-                ${hasAudience ? `<div>${escapeHtml(data.audienceText)}</div>` : ""}
-              </div>
-            ` : ""}
-          </div>
-        </div>
+        <section class="block">
+          ${String(title || "").trim() ? `<h2 class="headline">${escapeHtml(title)}</h2>` : ""}
+          ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
+          ${String(imageSrc || "").trim() ? `<div class="ops-image-wrap"><img class="ops-image" src="${escapeHtml(imageSrc)}" alt="Operational essential"></div>` : ""}
+        </section>
       `;
     }
 
-    function renderHero(data){
-      const hasTitle = String(data.heroTitle || "").trim();
-      const hasDate = String(data.heroDate || "").trim();
-      const hasButtonText = String(data.heroButtonText || "").trim();
-
-      if (!hasTitle && !hasDate && !hasButtonText) return "";
+    function renderPeople(people){
+      const visible = people.filter(p => p.name || p.role || p.image);
+      if (!visible.length) return "";
 
       return `
-        <div class="hero">
-          ${hasTitle ? `<h1>${escapeHtml(data.heroTitle)}</h1>` : ""}
-          ${hasDate ? `<div class="hero-date">${escapeHtml(data.heroDate)}</div>` : ""}
-          ${hasButtonText ? `<a class="hero-btn" href="${escapeHtml(data.heroButtonUrl || "#")}">${escapeHtml(data.heroButtonText)}</a>` : ""}
-        </div>
-      `;
-    }
-
-    function renderFooter(data){
-      const hasLead = String(data.footerLead || "").trim();
-      const hasLinkText = String(data.footerLinkText || "").trim();
-      const hasCopyright = String(data.copyrightText || "").trim();
-
-      if (!hasLead && !hasLinkText && !hasCopyright) return "";
-
-      return `
-        <div class="footer">
-          ${(hasLead || hasLinkText) ? `
-            <div class="footer-main">
-              ${hasLead ? `${parseRichText(data.footerLead)}` : ""}
-              ${hasLinkText ? `<p>Past releases can be found ${data.footerLinkUrl ? `<a href="${escapeHtml(data.footerLinkUrl)}">${escapeHtml(data.footerLinkText)}</a>` : escapeHtml(data.footerLinkText)}.</p>` : ""}
+        <div class="people-grid ${visible.length === 5 ? 'five' : ''}">
+          ${visible.map((p, i) => `
+            <div class="person ${visible.length === 5 && i === 4 ? 'person-last' : ''}">
+              ${p.image ? `<img class="person-photo" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name || 'Team member')}">` : `<div class="person-photo person-placeholder"></div>`}
+              ${p.name ? `<div class="person-name">${escapeHtml(p.name)}</div>` : ``}
+              ${p.role ? `<div class="person-role">${escapeHtml(p.role)}</div>` : ``}
             </div>
-          ` : ""}
-          ${hasCopyright ? `<div class="footer-rule"></div><div class="copyright">${escapeHtml(data.copyrightText)}</div>` : ""}
+          `).join("")}
         </div>
+      `;
+    }
+
+    function renderCultureSection(pill, body, people){
+      const peopleHtml = renderPeople(people);
+      if (!String(pill || "").trim() && !String(body || "").trim() && !peopleHtml) return "";
+
+      return `
+        <section class="block">
+          ${String(pill || "").trim() ? `<div class="pill green-pill">${escapeHtml(pill)}</div>` : ""}
+          <div class="culture-card">
+            ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
+            ${peopleHtml}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFooter(line1, line2, line3, linkText, linkUrl){
+      if (!line1 && !line2 && !line3 && !linkText) return "";
+      return `
+        <footer class="footer">
+          ${line1 ? `<div class="footer-line">${escapeHtml(line1)}</div>` : ""}
+          ${line2 ? `<div class="footer-line">${escapeHtml(line2)}</div>` : ""}
+          ${line3 ? `<div class="footer-line">${escapeHtml(line3)}</div>` : ""}
+          ${linkText ? `<div class="footer-line">Past releases can be found ${linkUrl ? `<a href="${escapeHtml(linkUrl)}">${escapeHtml(linkText)}</a>` : escapeHtml(linkText)}.</div>` : ""}
+        </footer>
       `;
     }
 
@@ -486,176 +574,213 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escapeHtml(data.heroTitle || "Newsletter")}</title>
+<title>${escapeHtml(data.mainTitle || "Partnership Newsletter")}</title>
 <style>
   body{
     margin:0;
-    background:#dcd8cf;
-    color:#232323;
+    background:#e7e2d7;
+    color:#1f1c1a;
     font-family:Arial, Helvetica, sans-serif;
   }
   .page{
     max-width:768px;
     margin:0 auto;
-    background:#dcd8cf;
-    padding:28px 28px 34px;
+    background:#e7e2d7;
+    padding:26px 28px 40px;
   }
-  .topbar{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:16px;
-    padding-bottom:18px;
-    border-bottom:1px solid #bfb7ae;
-  }
-  .logo-area{
-    display:flex;
-    align-items:flex-start;
-    gap:14px;
-  }
-  .logo-area img{
-    display:block;
-    max-width:150px;
-    height:auto;
-  }
-  .logo-meta{
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:13px;
-    line-height:1.2;
-    color:#222;
-    padding-top:2px;
-  }
-  .logo-meta a{
-    color:#0d5bd7;
+  .top-meta{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    align-items:center;
     font-weight:700;
-    text-decoration:underline;
+    font-size:13px;
+    color:#221f1c;
+    padding-bottom:8px;
+    border-bottom:2px solid #7d786f;
   }
-  .hero{
+  .top-meta div:nth-child(2){ text-align:center; }
+  .top-meta div:nth-child(3){ text-align:right; }
+
+  .brand-row{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:18px;
+    padding:14px 0 8px;
+    border-bottom:2px solid #7d786f;
+  }
+  .brand-logo{
+    width:70px;
+    height:70px;
+    object-fit:contain;
+    display:block;
+  }
+  .brand-logo.right{
+    transform:scaleX(-1);
+  }
+  .title-wrap{
     text-align:center;
-    padding:34px 0 28px;
   }
-  .hero h1{
+  .main-title{
     margin:0;
     font-family:Georgia, "Times New Roman", serif;
-    font-size:52px;
-    line-height:1.08;
+    font-size:54px;
+    line-height:1;
     font-weight:700;
-    color:#272525;
+    color:#0f0f0f;
   }
-  .hero-date{
-    margin-top:18px;
-    font-size:18px;
-    line-height:1.3;
-    color:#585858;
-    font-weight:600;
+
+  .month-row{
+    display:grid;
+    grid-template-columns:1fr 2.6fr 1fr;
+    align-items:center;
+    margin-top:0;
+    border-bottom:2px solid #7d786f;
   }
-  .hero-btn{
-    display:inline-block;
-    margin-top:10px;
-    background:#ef476f;
-    color:#fff;
-    padding:14px 24px;
-    border-radius:8px;
-    font-size:18px;
-    font-weight:800;
+  .month-row > div{
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-right:2px solid #7d786f;
+  }
+  .month-row > div:last-child{
+    border-right:none;
+  }
+  .month-text{
+    font-size:16px;
+    color:#383431;
+  }
+
+  .block{
+    margin-top:24px;
+  }
+  .headline{
+    margin:0 0 12px;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:24px;
+    line-height:1.2;
+    font-weight:700;
+    color:#201c19;
     text-decoration:underline;
   }
-  .section{
-    margin-top:28px;
+  .body-text{
+    font-size:17px;
+    line-height:1.5;
+    color:#24211d;
   }
-  .section h2{
-    margin:0 0 10px 0;
-    font-family:Georgia, "Times New Roman", serif;
-    font-size:30px;
-    line-height:1.22;
-    font-weight:500;
-    color:#2b2726;
-  }
-  .rule{
-    border-top:1px solid #c4bbb0;
-    margin:0 0 14px 0;
-  }
-  .content{
-    font-size:16px;
-    line-height:1.65;
-    color:#232323;
-  }
-  .content p{
+  .body-text p{
     margin:0 0 12px 0;
   }
-  .content ul{
-    margin:6px 0 14px 24px;
-    padding:0 0 0 14px;
+  .body-text ul{
+    margin:0 0 12px 18px;
+    padding-left:14px;
   }
-  .content li{
-    margin:0 0 10px 0;
+  .body-text li{
+    margin:0 0 8px 0;
   }
-  .content a{
-    color:#0d5bd7;
+  .body-text a{
+    color:#111;
     font-weight:700;
     text-decoration:underline;
   }
-  .callout{
-    margin-top:28px;
-    border-radius:14px;
-    padding:26px 24px 24px;
-    color:#fff;
+
+  .pill{
+    display:block;
+    width:max-content;
+    min-width:84%;
+    max-width:92%;
+    margin:0 auto -14px auto;
+    text-align:center;
+    padding:8px 18px;
+    border-radius:999px;
+    color:#fff7dc;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:.4px;
+    position:relative;
+    z-index:2;
   }
-  .callout .badge{
-    display:inline-block;
-    background:rgba(255,255,255,.8);
-    border-radius:8px;
-    padding:10px 18px;
-    font-family:Georgia, "Times New Roman", serif;
-    font-size:22px;
+  .purple-pill{ background:#6849a5; }
+  .pink-pill{ background:#f04f79; }
+  .green-pill{ background:#176f46; }
+
+  .soft-card{
+    border-radius:32px;
+    padding:30px 26px 22px;
+  }
+  .purple-card{ background:#d9c8ef; }
+  .pink-card{ background:#f2d7df; }
+
+  .ops-image-wrap{
+    margin-top:10px;
+  }
+  .ops-image{
+    display:block;
+    width:82%;
+    max-width:540px;
+    margin:0 auto;
+    border-radius:0;
+  }
+
+  .culture-card{
+    background:#dceab6;
+    border-radius:32px;
+    padding:30px 26px 24px;
+  }
+
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-top:18px;
+    align-items:start;
+  }
+  .people-grid.five .person-last{
+    grid-column:2 / span 2;
+    max-width:160px;
+    justify-self:center;
+  }
+  .person{
+    text-align:center;
+  }
+  .person-photo{
+    width:118px;
+    height:118px;
+    border-radius:28px;
+    object-fit:cover;
+    display:block;
+    margin:0 auto 10px;
+  }
+  .person-placeholder{
+    background:#d6d6d6;
+  }
+  .person-name{
+    font-size:16px;
+    font-weight:800;
     line-height:1.2;
-    margin-bottom:18px;
+    color:#111;
   }
-  .callout .content{
-    color:#fff;
-    font-weight:600;
-  }
-  .callout .content p,
-  .callout .content li{
-    color:#fff;
-  }
-  .callout.purple{ background:#a57df2; }
-  .callout.purple .badge{ color:#6d52ab; }
-
-  .callout.pink{ background:#ef476f; }
-  .callout.pink .badge{ color:#c53d5a; }
-
-  .callout.green{ background:#146d3e; }
-  .callout.green .badge{
-    background:#d7ec63;
-    color:#1d3813;
+  .person-role{
+    font-size:15px;
+    line-height:1.2;
+    color:#222;
+    margin-top:4px;
   }
 
   .footer{
     text-align:center;
-    padding-top:34px;
+    padding-top:26px;
+    font-size:17px;
+    line-height:1.5;
+    font-weight:800;
+    color:#151515;
   }
-  .footer-main{
-    font-size:16px;
-    line-height:1.55;
-    color:#555;
-    font-weight:700;
-  }
-  .footer-main p{
-    margin:0 0 8px 0;
-  }
-  .footer-main a{
-    color:#0d5bd7;
-    font-weight:700;
+  .footer-line{ margin:0 0 6px 0; }
+  .footer a{
+    color:#111;
     text-decoration:underline;
-  }
-  .footer-rule{
-    margin:40px 0 18px;
-    border-top:1px solid #bfb7ae;
-  }
-  .copyright{
-    font-size:14px;
-    color:#8c8c8c;
   }
 
   @page{
@@ -665,7 +790,7 @@
 
   @media print{
     html, body{
-      background:#ffffff !important;
+      background:#fff !important;
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
     }
@@ -673,65 +798,218 @@
       max-width:none !important;
       width:100% !important;
       margin:0 auto !important;
-      padding:0 !important;
-      background:#dcd8cf !important;
-    }
-    a{
-      color:inherit !important;
+      background:#e7e2d7 !important;
+      padding:18px !important;
     }
   }
 
-  @media (max-width: 640px){
+  @media (max-width:700px){
     .page{ padding:18px; }
-    .topbar{ flex-direction:column; }
-    .hero h1{ font-size:38px; }
-    .section h2{ font-size:22px; }
-    .callout .badge{ font-size:18px; }
+    .main-title{ font-size:38px; }
+    .top-meta{ grid-template-columns:1fr; }
+    .top-meta div:nth-child(2), .top-meta div:nth-child(3){ text-align:left; }
+    .brand-row{ grid-template-columns:1fr; }
+    .brand-logo{ margin:0 auto; }
+    .month-row{ grid-template-columns:1fr; }
+    .month-row > div{
+      border-right:none;
+      border-bottom:2px solid #7d786f;
+    }
+    .month-row > div:last-child{ border-bottom:none; }
+    .people-grid{ grid-template-columns:repeat(2,1fr); }
+    .people-grid.five .person-last{
+      grid-column:auto;
+      max-width:none;
+      justify-self:auto;
+    }
   }
 </style>
 </head>
 <body>
   <div class="page">
-    ${renderTopBar(data)}
-    ${renderHero(data)}
-    ${renderSection(data.s1Title, data.s1Body)}
-    ${renderCallout("purple", data.purpleLabel, data.purpleBody)}
-    ${renderSection(data.s2Title, data.s2Body)}
-    ${renderCallout("pink", data.pinkLabel, data.pinkBody)}
-    ${renderSection(data.s3Title, data.s3Body)}
-    ${renderCallout("green", data.greenLabel, data.greenBody)}
-    ${renderFooter(data)}
+    ${(data.headerLeft || data.headerCenter || data.headerRight) ? `
+      <div class="top-meta">
+        <div>${escapeHtml(data.headerLeft)}</div>
+        <div>${escapeHtml(data.headerCenter)}</div>
+        <div>${escapeHtml(data.headerRight)}</div>
+      </div>
+    ` : ""}
+
+    ${(data.logoSrc || data.mainTitle) ? `
+      <div class="brand-row">
+        ${data.logoSrc ? `<img class="brand-logo" src="${escapeHtml(data.logoSrc)}" alt="Logo">` : `<div></div>`}
+        <div class="title-wrap">
+          ${data.mainTitle ? `<h1 class="main-title">${escapeHtml(data.mainTitle)}</h1>` : ``}
+        </div>
+        ${data.logoSrc ? `<img class="brand-logo right" src="${escapeHtml(data.logoSrc)}" alt="Logo">` : `<div></div>`}
+      </div>
+    ` : ""}
+
+    ${data.subMonth ? `
+      <div class="month-row">
+        <div></div>
+        <div class="month-text">${escapeHtml(data.subMonth)}</div>
+        <div></div>
+      </div>
+    ` : ""}
+
+    ${renderSimpleSection(data.mustKnowTitle, data.mustKnowBody)}
+    ${renderPillCard(data.strategicPill, data.strategicBody, "purple-pill", "purple-card")}
+    ${renderSimpleSection(data.enablementTitle, data.enablementBody)}
+    ${renderPillCard(data.growthPill, data.growthBody, "pink-pill", "pink-card")}
+    ${renderOpsSection(data.opsTitle, data.opsBody, data.opsImageSrc)}
+    ${renderCultureSection(data.culturePill, data.cultureBody, data.people)}
+    ${renderFooter(data.footerLine1, data.footerLine2, data.footerLine3, data.footerLinkText, data.footerLinkUrl)}
   </div>
 </body>
 </html>`;
     }
 
+    function createTeamMember(initial = {}){
+      const member = {
+        id: ++teamMemberCounter,
+        name: initial.name || "",
+        role: initial.role || "",
+        imageUrl: initial.imageUrl || "",
+        uploadedImage: initial.uploadedImage || ""
+      };
+      teamMembers.push(member);
+      return member;
+    }
+
+    function removeTeamMember(id){
+      teamMembers = teamMembers.filter(member => member.id !== id);
+      renderTeamMembersEditor();
+      generate();
+    }
+
+    function updateMemberField(id, field, value){
+      const member = teamMembers.find(m => m.id === id);
+      if (!member) return;
+      member[field] = value;
+      generate();
+    }
+
+    async function handleMemberUpload(id, file){
+      const member = teamMembers.find(m => m.id === id);
+      if (!member || !file) return;
+      member.uploadedImage = await fileToDataUri(file);
+      renderTeamMembersEditor();
+      generate();
+    }
+
+    function memberImageSrc(member){
+      return member.uploadedImage || member.imageUrl || "";
+    }
+
+    function renderTeamMembersEditor(){
+      const container = $("teamMembersContainer");
+      container.innerHTML = "";
+
+      teamMembers.forEach((member, index) => {
+        const card = document.createElement("div");
+        card.className = "person-card";
+
+        card.innerHTML = `
+          <div class="person-card-header">
+            <div class="person-card-title">Team Member ${index + 1}</div>
+            <button type="button" class="danger-btn" data-remove-id="${member.id}">Delete</button>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label>Name</label>
+              <input type="text" data-field="name" data-id="${member.id}" value="${escapeHtml(member.name)}" placeholder="Full name">
+            </div>
+            <div class="field">
+              <label>Role</label>
+              <input type="text" data-field="role" data-id="${member.id}" value="${escapeHtml(member.role)}" placeholder="Role / Team">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Image URL</label>
+            <input type="url" data-field="imageUrl" data-id="${member.id}" value="${escapeHtml(member.imageUrl)}" placeholder="https://example.com/person.jpg">
+          </div>
+
+          <div class="field">
+            <label>Upload Image</label>
+            <input type="file" data-upload-id="${member.id}" accept="image/*">
+          </div>
+
+          <div class="btns">
+            <button type="button" data-clear-upload-id="${member.id}">Clear Uploaded Image</button>
+          </div>
+
+          ${memberImageSrc(member) ? `
+            <div class="img-preview">
+              <img src="${escapeHtml(memberImageSrc(member))}" alt="Preview">
+            </div>
+          ` : ``}
+        `;
+
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll("[data-remove-id]").forEach(btn => {
+        btn.addEventListener("click", () => removeTeamMember(Number(btn.dataset.removeId)));
+      });
+
+      container.querySelectorAll("input[data-field]").forEach(input => {
+        input.addEventListener("input", (e) => {
+          updateMemberField(Number(e.target.dataset.id), e.target.dataset.field, e.target.value);
+        });
+      });
+
+      container.querySelectorAll("input[data-upload-id]").forEach(input => {
+        input.addEventListener("change", async (e) => {
+          const file = e.target.files?.[0];
+          await handleMemberUpload(Number(e.target.dataset.uploadId), file);
+        });
+      });
+
+      container.querySelectorAll("[data-clear-upload-id]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const member = teamMembers.find(m => m.id === Number(btn.dataset.clearUploadId));
+          if (!member) return;
+          member.uploadedImage = "";
+          renderTeamMembersEditor();
+          generate();
+        });
+      });
+    }
+
     function readForm(){
       return {
-        logoSrc: pickLogoSrc(),
-        topLinkText: $("topLinkText").value || "",
-        topLinkUrl: $("topLinkUrl").value || "",
-        audienceText: $("audienceText").value || "",
-        heroTitle: $("heroTitle").value || "",
-        heroDate: $("heroDate").value || "",
-        heroButtonText: $("heroButtonText").value || "",
-        heroButtonUrl: $("heroButtonUrl").value || "",
-        s1Title: $("s1Title").value || "",
-        s1Body: $("s1Body").value || "",
-        purpleLabel: $("purpleLabel").value || "",
-        purpleBody: $("purpleBody").value || "",
-        s2Title: $("s2Title").value || "",
-        s2Body: $("s2Body").value || "",
-        pinkLabel: $("pinkLabel").value || "",
-        pinkBody: $("pinkBody").value || "",
-        s3Title: $("s3Title").value || "",
-        s3Body: $("s3Body").value || "",
-        greenLabel: $("greenLabel").value || "",
-        greenBody: $("greenBody").value || "",
-        footerLead: $("footerLead").value || "",
+        logoSrc: pickImage("logo", "logoUrl"),
+        headerLeft: $("headerLeft").value || "",
+        headerCenter: $("headerCenter").value || "",
+        headerRight: $("headerRight").value || "",
+        mainTitle: $("mainTitle").value || "",
+        subMonth: $("subMonth").value || "",
+        mustKnowTitle: $("mustKnowTitle").value || "",
+        mustKnowBody: $("mustKnowBody").value || "",
+        strategicPill: $("strategicPill").value || "",
+        strategicBody: $("strategicBody").value || "",
+        enablementTitle: $("enablementTitle").value || "",
+        enablementBody: $("enablementBody").value || "",
+        growthPill: $("growthPill").value || "",
+        growthBody: $("growthBody").value || "",
+        opsTitle: $("opsTitle").value || "",
+        opsBody: $("opsBody").value || "",
+        opsImageSrc: pickImage("ops", "opsImageUrl"),
+        culturePill: $("culturePill").value || "",
+        cultureBody: $("cultureBody").value || "",
+        people: teamMembers.map(member => ({
+          name: member.name,
+          role: member.role,
+          image: memberImageSrc(member)
+        })),
+        footerLine1: $("footerLine1").value || "",
+        footerLine2: $("footerLine2").value || "",
+        footerLine3: $("footerLine3").value || "",
         footerLinkText: $("footerLinkText").value || "",
-        footerLinkUrl: $("footerLinkUrl").value || "",
-        copyrightText: $("copyrightText").value || ""
+        footerLinkUrl: $("footerLinkUrl").value || ""
       };
     }
 
@@ -741,32 +1019,51 @@
       $("iframePreview").srcdoc = html;
     }
 
-    $("logoUpload").addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      uploadedLogoDataUri = await fileToDataUri(file);
-      $("logoPreview").src = uploadedLogoDataUri;
-      $("logoPreviewBox").style.display = "";
-      generate();
-    });
+    async function wireUpload(inputId, key, previewImgId = null, previewBoxId = null){
+      $(inputId).addEventListener("change", async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        uploadedImages[key] = await fileToDataUri(file);
+        if (previewImgId && previewBoxId){
+          $(previewImgId).src = uploadedImages[key];
+          $(previewBoxId).style.display = "";
+        }
+        generate();
+      });
+    }
+
+    wireUpload("logoUpload", "logo", "logoPreview", "logoPreviewBox");
+    wireUpload("opsImageUpload", "ops", "opsImagePreview", "opsImagePreviewBox");
 
     $("clearLogo").addEventListener("click", () => {
-      uploadedLogoDataUri = "";
+      uploadedImages.logo = "";
       $("logoUpload").value = "";
       $("logoPreviewBox").style.display = "none";
       generate();
     });
 
+    $("clearOpsImage").addEventListener("click", () => {
+      uploadedImages.ops = "";
+      $("opsImageUpload").value = "";
+      $("opsImagePreviewBox").style.display = "none";
+      generate();
+    });
+
+    $("addMemberBtn").addEventListener("click", () => {
+      createTeamMember();
+      renderTeamMembersEditor();
+      generate();
+    });
+
     [
-      "logoUrl","topLinkText","topLinkUrl","audienceText",
-      "heroTitle","heroDate","heroButtonText","heroButtonUrl",
-      "s1Title","s1Body",
-      "purpleLabel","purpleBody",
-      "s2Title","s2Body",
-      "pinkLabel","pinkBody",
-      "s3Title","s3Body",
-      "greenLabel","greenBody",
-      "footerLead","footerLinkText","footerLinkUrl","copyrightText"
+      "logoUrl","headerLeft","headerCenter","headerRight","mainTitle","subMonth",
+      "mustKnowTitle","mustKnowBody",
+      "strategicPill","strategicBody",
+      "enablementTitle","enablementBody",
+      "growthPill","growthBody",
+      "opsTitle","opsBody","opsImageUrl",
+      "culturePill","cultureBody",
+      "footerLine1","footerLine2","footerLine3","footerLinkText","footerLinkUrl"
     ].forEach(id => {
       $(id).addEventListener("input", generate);
     });
@@ -818,11 +1115,7 @@
             max-width: none !important;
             width: 100% !important;
             margin: 0 auto !important;
-            padding: 0 !important;
-            background: #dcd8cf !important;
-          }
-          a {
-            color: inherit !important;
+            background: #e7e2d7 !important;
           }
         `;
         doc.head.appendChild(printStyle);
@@ -846,6 +1139,12 @@
       $("htmlOut").style.display = "";
     });
 
+    createTeamMember();
+    createTeamMember();
+    createTeamMember();
+    createTeamMember();
+    createTeamMember();
+    renderTeamMembersEditor();
     generate();
   </script>
 </body>
