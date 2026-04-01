@@ -181,7 +181,7 @@
   <div class="app">
     <aside class="panel">
       <h1>Newsletter Generator</h1>
-      <p class="sub">Add your own titles and content. Empty sections will stay hidden in the preview and final HTML.</p>
+      <p class="sub">Add your own titles and content. Empty sections stay hidden until you add content.</p>
 
       <form id="form">
         <div class="section">
@@ -266,7 +266,7 @@
           </div>
           <div class="field">
             <label for="purpleBody">Body</label>
-            <textarea id="purpleBody" placeholder="Write callout content here..."></textarea>
+            <textarea id="purpleBody" placeholder="Write purple card content here..."></textarea>
           </div>
         </div>
 
@@ -290,7 +290,7 @@
           </div>
           <div class="field">
             <label for="pinkBody">Body</label>
-            <textarea id="pinkBody" placeholder="Write callout content here..."></textarea>
+            <textarea id="pinkBody" placeholder="Write pink card content here..."></textarea>
           </div>
         </div>
 
@@ -314,7 +314,7 @@
           </div>
           <div class="field">
             <label for="greenBody">Body</label>
-            <textarea id="greenBody" placeholder="Write callout content here..."></textarea>
+            <textarea id="greenBody" placeholder="Write green card content here..."></textarea>
           </div>
         </div>
 
@@ -343,6 +343,7 @@
         <div class="btns">
           <button type="submit" class="primary">Generate</button>
           <button type="button" id="copyBtn">Copy HTML</button>
+          <button type="button" id="downloadPdfBtn">Download PDF</button>
         </div>
       </form>
     </aside>
@@ -603,7 +604,6 @@
   .callout .badge{
     display:inline-block;
     background:rgba(255,255,255,.8);
-    color:#6a4ca8;
     border-radius:8px;
     padding:10px 18px;
     font-family:Georgia, "Times New Roman", serif;
@@ -656,6 +656,29 @@
   .copyright{
     font-size:14px;
     color:#8c8c8c;
+  }
+
+  @page{
+    size:A4;
+    margin:12mm;
+  }
+
+  @media print{
+    html, body{
+      background:#ffffff !important;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+    .page{
+      max-width:none !important;
+      width:100% !important;
+      margin:0 auto !important;
+      padding:0 !important;
+      background:#dcd8cf !important;
+    }
+    a{
+      color:inherit !important;
+    }
   }
 
   @media (max-width: 640px){
@@ -762,6 +785,51 @@
       }catch(err){
         alert("Copy failed. Copy from the HTML tab manually.");
       }
+    });
+
+    $("downloadPdfBtn").addEventListener("click", () => {
+      const iframe = $("iframePreview");
+      if (!iframe || !iframe.contentWindow) {
+        alert("Preview is not ready yet.");
+        return;
+      }
+
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc) {
+        alert("Preview is not ready yet.");
+        return;
+      }
+
+      let printStyle = doc.getElementById("pdf-print-style");
+      if (!printStyle) {
+        printStyle = doc.createElement("style");
+        printStyle.id = "pdf-print-style";
+        printStyle.textContent = `
+          @page {
+            size: A4;
+            margin: 12mm;
+          }
+          html, body {
+            background: #ffffff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .page {
+            max-width: none !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            background: #dcd8cf !important;
+          }
+          a {
+            color: inherit !important;
+          }
+        `;
+        doc.head.appendChild(printStyle);
+      }
+
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
     });
 
     $("showPreview").addEventListener("click", () => {
