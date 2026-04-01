@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Partnership Newsletter Generator</title>
+  <title>Partnership Newsletter Generator - Gmail Safe</title>
   <style>
     :root{
       --app-bg:#f4f4f4;
@@ -12,18 +12,6 @@
       --panel-shadow:0 10px 30px rgba(0,0,0,.10);
       --accent:#5b0a3a;
       --muted:rgba(0,0,0,.65);
-      --page-bg:#e7e2d7;
-      --text:#1f1c1a;
-      --line:#7d786f;
-
-      --purple-pill:#6849a5;
-      --purple-card:#d9c8ef;
-
-      --pink-pill:#f04f79;
-      --pink-card:#f2d7df;
-
-      --green-pill:#176f46;
-      --green-card:#dceab6;
     }
 
     *{box-sizing:border-box}
@@ -255,7 +243,7 @@
   <div class="app">
     <aside class="panel">
       <h1>Partnership Newsletter Generator</h1>
-      <p class="sub">This version matches the uploaded PDF style, and now you can add or delete team members dynamically.</p>
+      <p class="sub">This version generates a Gmail-safe email template using tables and inline styles.</p>
 
       <form id="form">
         <div class="section">
@@ -275,6 +263,7 @@
             <div class="img-preview" id="logoPreviewBox" style="display:none;">
               <img id="logoPreview" alt="Logo preview">
             </div>
+            <div class="mini">Hosted image URLs are recommended for sent emails.</div>
           </div>
 
           <div class="row-3">
@@ -483,386 +472,14 @@
         const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
         const allBullets = lines.length && lines.every(l => l.startsWith("- "));
         if (allBullets){
-          return `<ul>${lines.map(l => `<li>${escapeHtml(l.slice(2))}</li>`).join("")}</ul>`;
+          return `<ul style="margin:0 0 12px 18px; padding-left:14px;">${lines.map(l => `<li style="margin:0 0 8px 0;">${escapeHtml(l.slice(2))}</li>`).join("")}</ul>`;
         }
-        return `<p>${lines.map(l => escapeHtml(l)).join("<br>")}</p>`;
+        return `<p style="margin:0 0 12px 0;">${lines.map(l => escapeHtml(l)).join("<br>")}</p>`;
       }).join("");
     }
 
     function pickImage(uploadedKey, urlFieldId){
       return uploadedImages[uploadedKey] || $(urlFieldId).value || "";
-    }
-
-    function renderSimpleSection(title, body){
-      if (!String(title || "").trim() && !String(body || "").trim()) return "";
-      return `
-        <section class="block">
-          ${String(title || "").trim() ? `<h2 class="headline">${escapeHtml(title)}</h2>` : ""}
-          ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
-        </section>
-      `;
-    }
-
-    function renderPillCard(pillText, body, pillClass, cardClass){
-      if (!String(pillText || "").trim() && !String(body || "").trim()) return "";
-      return `
-        <section class="block">
-          ${String(pillText || "").trim() ? `<div class="pill ${pillClass}">${escapeHtml(pillText)}</div>` : ""}
-          ${String(body || "").trim() ? `<div class="soft-card ${cardClass}"><div class="body-text">${parseRichText(body)}</div></div>` : ""}
-        </section>
-      `;
-    }
-
-    function renderOpsSection(title, body, imageSrc){
-      if (!String(title || "").trim() && !String(body || "").trim() && !String(imageSrc || "").trim()) return "";
-      return `
-        <section class="block">
-          ${String(title || "").trim() ? `<h2 class="headline">${escapeHtml(title)}</h2>` : ""}
-          ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
-          ${String(imageSrc || "").trim() ? `<div class="ops-image-wrap"><img class="ops-image" src="${escapeHtml(imageSrc)}" alt="Operational essential"></div>` : ""}
-        </section>
-      `;
-    }
-
-    function renderPeople(people){
-      const visible = people.filter(p => p.name || p.role || p.image);
-      if (!visible.length) return "";
-
-      return `
-        <div class="people-grid ${visible.length === 5 ? 'five' : ''}">
-          ${visible.map((p, i) => `
-            <div class="person ${visible.length === 5 && i === 4 ? 'person-last' : ''}">
-              ${p.image ? `<img class="person-photo" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name || 'Team member')}">` : `<div class="person-photo person-placeholder"></div>`}
-              ${p.name ? `<div class="person-name">${escapeHtml(p.name)}</div>` : ``}
-              ${p.role ? `<div class="person-role">${escapeHtml(p.role)}</div>` : ``}
-            </div>
-          `).join("")}
-        </div>
-      `;
-    }
-
-    function renderCultureSection(pill, body, people){
-      const peopleHtml = renderPeople(people);
-      if (!String(pill || "").trim() && !String(body || "").trim() && !peopleHtml) return "";
-
-      return `
-        <section class="block">
-          ${String(pill || "").trim() ? `<div class="pill green-pill">${escapeHtml(pill)}</div>` : ""}
-          <div class="culture-card">
-            ${String(body || "").trim() ? `<div class="body-text">${parseRichText(body)}</div>` : ""}
-            ${peopleHtml}
-          </div>
-        </section>
-      `;
-    }
-
-    function renderFooter(line1, line2, line3, linkText, linkUrl){
-      if (!line1 && !line2 && !line3 && !linkText) return "";
-      return `
-        <footer class="footer">
-          ${line1 ? `<div class="footer-line">${escapeHtml(line1)}</div>` : ""}
-          ${line2 ? `<div class="footer-line">${escapeHtml(line2)}</div>` : ""}
-          ${line3 ? `<div class="footer-line">${escapeHtml(line3)}</div>` : ""}
-          ${linkText ? `<div class="footer-line">Past releases can be found ${linkUrl ? `<a href="${escapeHtml(linkUrl)}">${escapeHtml(linkText)}</a>` : escapeHtml(linkText)}.</div>` : ""}
-        </footer>
-      `;
-    }
-
-    function buildHtml(data){
-      return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escapeHtml(data.mainTitle || "Partnership Newsletter")}</title>
-<style>
-  body{
-    margin:0;
-    background:#e7e2d7;
-    color:#1f1c1a;
-    font-family:Arial, Helvetica, sans-serif;
-  }
-  .page{
-    max-width:768px;
-    margin:0 auto;
-    background:#e7e2d7;
-    padding:26px 28px 40px;
-  }
-  .top-meta{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:10px;
-    align-items:center;
-    font-weight:700;
-    font-size:13px;
-    color:#221f1c;
-    padding-bottom:8px;
-    border-bottom:2px solid #7d786f;
-  }
-  .top-meta div:nth-child(2){ text-align:center; }
-  .top-meta div:nth-child(3){ text-align:right; }
-
-  .brand-row{
-    display:grid;
-    grid-template-columns:auto 1fr auto;
-    align-items:center;
-    gap:18px;
-    padding:14px 0 8px;
-    border-bottom:2px solid #7d786f;
-  }
-  .brand-logo{
-    width:70px;
-    height:70px;
-    object-fit:contain;
-    display:block;
-  }
-  .brand-logo.right{
-    transform:scaleX(-1);
-  }
-  .title-wrap{
-    text-align:center;
-  }
-  .main-title{
-    margin:0;
-    font-family:Georgia, "Times New Roman", serif;
-    font-size:54px;
-    line-height:1;
-    font-weight:700;
-    color:#0f0f0f;
-  }
-
-  .month-row{
-    display:grid;
-    grid-template-columns:1fr 2.6fr 1fr;
-    align-items:center;
-    margin-top:0;
-    border-bottom:2px solid #7d786f;
-  }
-  .month-row > div{
-    min-height:34px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-right:2px solid #7d786f;
-  }
-  .month-row > div:last-child{
-    border-right:none;
-  }
-  .month-text{
-    font-size:16px;
-    color:#383431;
-  }
-
-  .block{
-    margin-top:24px;
-  }
-  .headline{
-    margin:0 0 12px;
-    font-family:Georgia, "Times New Roman", serif;
-    font-size:24px;
-    line-height:1.2;
-    font-weight:700;
-    color:#201c19;
-    text-decoration:underline;
-  }
-  .body-text{
-    font-size:17px;
-    line-height:1.5;
-    color:#24211d;
-  }
-  .body-text p{
-    margin:0 0 12px 0;
-  }
-  .body-text ul{
-    margin:0 0 12px 18px;
-    padding-left:14px;
-  }
-  .body-text li{
-    margin:0 0 8px 0;
-  }
-  .body-text a{
-    color:#111;
-    font-weight:700;
-    text-decoration:underline;
-  }
-
-  .pill{
-    display:block;
-    width:max-content;
-    min-width:84%;
-    max-width:92%;
-    margin:0 auto -14px auto;
-    text-align:center;
-    padding:8px 18px;
-    border-radius:999px;
-    color:#fff7dc;
-    font-weight:800;
-    font-size:18px;
-    letter-spacing:.4px;
-    position:relative;
-    z-index:2;
-  }
-  .purple-pill{ background:#6849a5; }
-  .pink-pill{ background:#f04f79; }
-  .green-pill{ background:#176f46; }
-
-  .soft-card{
-    border-radius:32px;
-    padding:30px 26px 22px;
-  }
-  .purple-card{ background:#d9c8ef; }
-  .pink-card{ background:#f2d7df; }
-
-  .ops-image-wrap{
-    margin-top:10px;
-  }
-  .ops-image{
-    display:block;
-    width:82%;
-    max-width:540px;
-    margin:0 auto;
-    border-radius:0;
-  }
-
-  .culture-card{
-    background:#dceab6;
-    border-radius:32px;
-    padding:30px 26px 24px;
-  }
-
-  .people-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:22px;
-    margin-top:18px;
-    align-items:start;
-  }
-  .people-grid.five .person-last{
-    grid-column:2 / span 2;
-    max-width:160px;
-    justify-self:center;
-  }
-  .person{
-    text-align:center;
-  }
-  .person-photo{
-    width:118px;
-    height:118px;
-    border-radius:28px;
-    object-fit:cover;
-    display:block;
-    margin:0 auto 10px;
-  }
-  .person-placeholder{
-    background:#d6d6d6;
-  }
-  .person-name{
-    font-size:16px;
-    font-weight:800;
-    line-height:1.2;
-    color:#111;
-  }
-  .person-role{
-    font-size:15px;
-    line-height:1.2;
-    color:#222;
-    margin-top:4px;
-  }
-
-  .footer{
-    text-align:center;
-    padding-top:26px;
-    font-size:17px;
-    line-height:1.5;
-    font-weight:800;
-    color:#151515;
-  }
-  .footer-line{ margin:0 0 6px 0; }
-  .footer a{
-    color:#111;
-    text-decoration:underline;
-  }
-
-  @page{
-    size:A4;
-    margin:12mm;
-  }
-
-  @media print{
-    html, body{
-      background:#fff !important;
-      -webkit-print-color-adjust:exact;
-      print-color-adjust:exact;
-    }
-    .page{
-      max-width:none !important;
-      width:100% !important;
-      margin:0 auto !important;
-      background:#e7e2d7 !important;
-      padding:18px !important;
-    }
-  }
-
-  @media (max-width:700px){
-    .page{ padding:18px; }
-    .main-title{ font-size:38px; }
-    .top-meta{ grid-template-columns:1fr; }
-    .top-meta div:nth-child(2), .top-meta div:nth-child(3){ text-align:left; }
-    .brand-row{ grid-template-columns:1fr; }
-    .brand-logo{ margin:0 auto; }
-    .month-row{ grid-template-columns:1fr; }
-    .month-row > div{
-      border-right:none;
-      border-bottom:2px solid #7d786f;
-    }
-    .month-row > div:last-child{ border-bottom:none; }
-    .people-grid{ grid-template-columns:repeat(2,1fr); }
-    .people-grid.five .person-last{
-      grid-column:auto;
-      max-width:none;
-      justify-self:auto;
-    }
-  }
-</style>
-</head>
-<body>
-  <div class="page">
-    ${(data.headerLeft || data.headerCenter || data.headerRight) ? `
-      <div class="top-meta">
-        <div>${escapeHtml(data.headerLeft)}</div>
-        <div>${escapeHtml(data.headerCenter)}</div>
-        <div>${escapeHtml(data.headerRight)}</div>
-      </div>
-    ` : ""}
-
-    ${(data.logoSrc || data.mainTitle) ? `
-      <div class="brand-row">
-        ${data.logoSrc ? `<img class="brand-logo" src="${escapeHtml(data.logoSrc)}" alt="Logo">` : `<div></div>`}
-        <div class="title-wrap">
-          ${data.mainTitle ? `<h1 class="main-title">${escapeHtml(data.mainTitle)}</h1>` : ``}
-        </div>
-        ${data.logoSrc ? `<img class="brand-logo right" src="${escapeHtml(data.logoSrc)}" alt="Logo">` : `<div></div>`}
-      </div>
-    ` : ""}
-
-    ${data.subMonth ? `
-      <div class="month-row">
-        <div></div>
-        <div class="month-text">${escapeHtml(data.subMonth)}</div>
-        <div></div>
-      </div>
-    ` : ""}
-
-    ${renderSimpleSection(data.mustKnowTitle, data.mustKnowBody)}
-    ${renderPillCard(data.strategicPill, data.strategicBody, "purple-pill", "purple-card")}
-    ${renderSimpleSection(data.enablementTitle, data.enablementBody)}
-    ${renderPillCard(data.growthPill, data.growthBody, "pink-pill", "pink-card")}
-    ${renderOpsSection(data.opsTitle, data.opsBody, data.opsImageSrc)}
-    ${renderCultureSection(data.culturePill, data.cultureBody, data.people)}
-    ${renderFooter(data.footerLine1, data.footerLine2, data.footerLine3, data.footerLinkText, data.footerLinkUrl)}
-  </div>
-</body>
-</html>`;
     }
 
     function createTeamMember(initial = {}){
@@ -1013,6 +630,253 @@
       };
     }
 
+    function renderPeopleEmail(people){
+      const visible = people.filter(p => p.name || p.role || p.image);
+      if (!visible.length) return "";
+
+      let rows = [];
+      for (let i = 0; i < visible.length; i += 4){
+        rows.push(visible.slice(i, i + 4));
+      }
+
+      return rows.map((row, rowIndex) => `
+        <tr>
+          ${row.map(person => `
+            <td width="${Math.floor(100 / row.length)}%" valign="top" align="center" style="padding:14px 8px;">
+              ${person.image ? `
+                <img src="${escapeHtml(person.image)}" alt="${escapeHtml(person.name || 'Team member')}" width="118" height="118" style="display:block; width:118px; height:118px; border-radius:28px; object-fit:cover; margin:0 auto 10px;">
+              ` : `
+                <div style="width:118px; height:118px; border-radius:28px; background:#d6d6d6; margin:0 auto 10px;"></div>
+              `}
+              ${person.name ? `<div style="font-size:16px; line-height:1.2; font-weight:800; color:#111;">${escapeHtml(person.name)}</div>` : ``}
+              ${person.role ? `<div style="font-size:15px; line-height:1.2; color:#222; margin-top:4px;">${escapeHtml(person.role)}</div>` : ``}
+            </td>
+          `).join("")}
+          ${Array.from({length: 4 - row.length}).map(() => `<td>&nbsp;</td>`).join("")}
+        </tr>
+      `).join("");
+    }
+
+    function buildHtml(data){
+      const hasTopMeta = data.headerLeft || data.headerCenter || data.headerRight;
+      const hasBrand = data.logoSrc || data.mainTitle;
+      const hasMonthRow = data.subMonth;
+      const peopleRows = renderPeopleEmail(data.people);
+
+      return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(data.mainTitle || "Partnership Newsletter")}</title>
+</head>
+<body style="margin:0; padding:0; background:#e7e2d7;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e7e2d7; margin:0; padding:0;">
+    <tr>
+      <td align="center" style="padding:20px 0;">
+        <table role="presentation" width="768" cellpadding="0" cellspacing="0" border="0" style="width:768px; max-width:768px; background:#e7e2d7;">
+          
+          ${hasTopMeta ? `
+          <tr>
+            <td style="padding:0 28px 8px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:2px solid #7d786f;">
+                <tr>
+                  <td align="left" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:700; color:#221f1c; padding-bottom:8px;">${escapeHtml(data.headerLeft)}</td>
+                  <td align="center" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:700; color:#221f1c; padding-bottom:8px;">${escapeHtml(data.headerCenter)}</td>
+                  <td align="right" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:700; color:#221f1c; padding-bottom:8px;">${escapeHtml(data.headerRight)}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${hasBrand ? `
+          <tr>
+            <td style="padding:14px 28px 8px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:2px solid #7d786f;">
+                <tr>
+                  <td width="90" align="left" valign="middle" style="padding-bottom:8px;">
+                    ${data.logoSrc ? `<img src="${escapeHtml(data.logoSrc)}" alt="Logo" width="70" height="70" style="display:block; width:70px; height:70px; object-fit:contain;">` : ``}
+                  </td>
+                  <td align="center" valign="middle" style="padding-bottom:8px; font-family:Georgia, 'Times New Roman', serif; font-size:54px; line-height:1; font-weight:700; color:#0f0f0f;">
+                    ${escapeHtml(data.mainTitle)}
+                  </td>
+                  <td width="90" align="right" valign="middle" style="padding-bottom:8px;">
+                    ${data.logoSrc ? `<img src="${escapeHtml(data.logoSrc)}" alt="Logo" width="70" height="70" style="display:block; width:70px; height:70px; object-fit:contain;">` : ``}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${hasMonthRow ? `
+          <tr>
+            <td style="padding:0 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:2px solid #7d786f;">
+                <tr>
+                  <td width="30%" style="height:34px; border-right:2px solid #7d786f;">&nbsp;</td>
+                  <td width="40%" align="center" valign="middle" style="height:34px; border-right:2px solid #7d786f; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#383431;">
+                    ${escapeHtml(data.subMonth)}
+                  </td>
+                  <td width="30%" style="height:34px;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.mustKnowTitle || data.mustKnowBody) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              ${data.mustKnowTitle ? `<div style="font-family:Georgia, 'Times New Roman', serif; font-size:24px; line-height:1.2; font-weight:700; color:#201c19; text-decoration:underline; margin-bottom:12px;">${escapeHtml(data.mustKnowTitle)}</div>` : ``}
+              ${data.mustKnowBody ? `<div style="font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">${parseRichText(data.mustKnowBody)}</div>` : ``}
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.strategicPill || data.strategicBody) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${data.strategicPill ? `
+                <tr>
+                  <td align="center" style="padding:0 0 0 0;">
+                    <div style="display:inline-block; min-width:84%; max-width:92%; background:#6849a5; color:#fff7dc; font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:800; letter-spacing:.4px; text-align:center; padding:8px 18px; border-radius:999px;">
+                      ${escapeHtml(data.strategicPill)}
+                    </div>
+                  </td>
+                </tr>
+                ` : ``}
+                ${data.strategicBody ? `
+                <tr>
+                  <td style="padding-top:0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#d9c8ef; border-radius:32px;">
+                      <tr>
+                        <td style="padding:30px 26px 22px 26px; font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">
+                          ${parseRichText(data.strategicBody)}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                ` : ``}
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.enablementTitle || data.enablementBody) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              ${data.enablementTitle ? `<div style="font-family:Georgia, 'Times New Roman', serif; font-size:24px; line-height:1.2; font-weight:700; color:#201c19; text-decoration:underline; margin-bottom:12px;">${escapeHtml(data.enablementTitle)}</div>` : ``}
+              ${data.enablementBody ? `<div style="font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">${parseRichText(data.enablementBody)}</div>` : ``}
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.growthPill || data.growthBody) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${data.growthPill ? `
+                <tr>
+                  <td align="center">
+                    <div style="display:inline-block; min-width:84%; max-width:92%; background:#f04f79; color:#fff7dc; font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:800; letter-spacing:.4px; text-align:center; padding:8px 18px; border-radius:999px;">
+                      ${escapeHtml(data.growthPill)}
+                    </div>
+                  </td>
+                </tr>
+                ` : ``}
+                ${data.growthBody ? `
+                <tr>
+                  <td style="padding-top:0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2d7df; border-radius:32px;">
+                      <tr>
+                        <td style="padding:30px 26px 22px 26px; font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">
+                          ${parseRichText(data.growthBody)}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                ` : ``}
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.opsTitle || data.opsBody || data.opsImageSrc) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              ${data.opsTitle ? `<div style="font-family:Georgia, 'Times New Roman', serif; font-size:24px; line-height:1.2; font-weight:700; color:#201c19; text-decoration:underline; margin-bottom:12px;">${escapeHtml(data.opsTitle)}</div>` : ``}
+              ${data.opsBody ? `<div style="font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">${parseRichText(data.opsBody)}</div>` : ``}
+              ${data.opsImageSrc ? `
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td align="center" style="padding-top:10px;">
+                      <img src="${escapeHtml(data.opsImageSrc)}" alt="Operational essential" style="display:block; width:82%; max-width:540px; height:auto; border:0;">
+                    </td>
+                  </tr>
+                </table>
+              ` : ``}
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.culturePill || data.cultureBody || peopleRows) ? `
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${data.culturePill ? `
+                <tr>
+                  <td align="center">
+                    <div style="display:inline-block; min-width:84%; max-width:92%; background:#176f46; color:#d7ec63; font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:800; letter-spacing:.4px; text-align:center; padding:8px 18px; border-radius:999px;">
+                      ${escapeHtml(data.culturePill)}
+                    </div>
+                  </td>
+                </tr>
+                ` : ``}
+                <tr>
+                  <td style="padding-top:0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#dceab6; border-radius:32px;">
+                      <tr>
+                        <td style="padding:30px 26px 24px 26px;">
+                          ${data.cultureBody ? `<div style="font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; color:#24211d;">${parseRichText(data.cultureBody)}</div>` : ``}
+                          ${peopleRows ? `
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px;">
+                              ${peopleRows}
+                            </table>
+                          ` : ``}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ""}
+
+          ${(data.footerLine1 || data.footerLine2 || data.footerLine3 || data.footerLinkText) ? `
+          <tr>
+            <td align="center" style="padding:26px 28px 0 28px; font-family:Arial, Helvetica, sans-serif; font-size:17px; line-height:1.5; font-weight:800; color:#151515;">
+              ${data.footerLine1 ? `<div style="margin:0 0 6px 0;">${escapeHtml(data.footerLine1)}</div>` : ``}
+              ${data.footerLine2 ? `<div style="margin:0 0 6px 0;">${escapeHtml(data.footerLine2)}</div>` : ``}
+              ${data.footerLine3 ? `<div style="margin:0 0 6px 0;">${escapeHtml(data.footerLine3)}</div>` : ``}
+              ${data.footerLinkText ? `<div style="margin:0 0 6px 0;">Past releases can be found ${data.footerLinkUrl ? `<a href="${escapeHtml(data.footerLinkUrl)}" style="color:#111; text-decoration:underline;">${escapeHtml(data.footerLinkText)}</a>` : escapeHtml(data.footerLinkText)}.</div>` : ``}
+            </td>
+          </tr>
+          ` : ""}
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    }
+
     function generate(){
       const html = buildHtml(readForm());
       $("htmlOut").value = html;
@@ -1110,12 +974,6 @@
             background: #ffffff !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-          }
-          .page {
-            max-width: none !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-            background: #e7e2d7 !important;
           }
         `;
         doc.head.appendChild(printStyle);
